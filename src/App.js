@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react'
+
+import Header from './components/Header'
+import Button from './components/Button'
+import Initiative from './components/Initiative'
+
 
 function App() {
+
+  const [init, setInit] = useState(
+    [
+        {"id": 1, "name": "foo", "init": 10},
+        {"id": 2, "name": "bar", "init": 8},
+        {"id": 3, "name": "baz", "init": 21}
+    ]
+  )
+
+  const onInitClick = (e) => {
+    let newInitID = init.reduce((a,b)=>a.id>b.id?a:b).id + 1
+    setInit([...init, {"id": newInitID, "name": "roger", "init": 9}])
+    console.log("List item clicked")
+    console.log(e)
+}
+
+
+  const onClick = () => {
+    console.log("Button clicked")
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+        <Header user='Nickoli' />
+        <Button onClick={onClick}/>
+        <Initiative init={init} onClick={onInitClick}/>
     </div>
   );
 }
