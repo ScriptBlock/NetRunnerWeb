@@ -1,24 +1,71 @@
-
+import InitItem from './InitItem'
 
 const Initiative = (props) => {
-
-
-
+/*
+{
+        "id": 1,
+        "type": "ice",
+        "thingID": "2",
+        "order": 9
+    }
+*/
+    const currentInitiative = props.init
+    const runnersFromAPI = [
+        {"id": 1, "name": "CrashOverride", "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "mapid":1, "roomid":1, "discoveredrooms":[]}
+    ]
+    
+    let buttonData = currentInitiative.map(i => {
+        let runner = runnersFromAPI.find(r => r.id === Number(i.thingID))
+        if(runner !== undefined) { 
+            return {...runner, ...i}
+        } else {
+            return {...i, "name": "nadda"}
+        }
+    })
+/*
     return (
         <div className="panel-primary">
             <div className="panel-heading">Initiative Members</div>
             <div className="panel-body">
                 <div className="list-group">
-                    { props.init.map((i) => (
-                        <a href="#" key={i.id} className="list-group-item" onClick={props.onClick}>{i.name}</a>
+                    { buttonData.map((b) => (
+                        <InitItem data={b} onClick={props.onClick} />
                     ))
                     }
                 </div>
             </div>
-
         </div>
-            
-        
+    )
+*/
+
+/*
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Panel title</h3>
+                    </div>
+                    <div class="panel-body">
+                        Panel content
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Panel title</h3>
+                    </div>
+                    <div class="panel-body">
+                        Panel content
+                    </div>
+                </div>
+*/
+    return (
+        <div className="panel panel-primary">
+            <div className="panel-heading"><h3 className="panel-title">Initiative Members</h3></div>
+            <div className="panel-body">
+                { buttonData.map((b) => (
+                    <InitItem key={b.id} data={b} onClick={props.onClick} />
+                ))
+                }
+            </div>
+        </div>
     )
 }
 

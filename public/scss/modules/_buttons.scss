@@ -1,0 +1,54 @@
+/*
+    按鈕控件主題
+*/
+.btn-default,.btn-primary,.btn-success,.btn-info,.btn-warning,.btn-danger,.btn-link {
+    border-radius: 0%;
+    padding: 5px;
+    border: none;
+}
+.btn-default {
+    background: transparent;
+    color: white;
+}
+.btn-default:hover {
+    background: white;
+}
+.btn-primary {
+    background: $primary-color;
+
+}
+.btn-primary:hover {
+    background: $primary-color-hover;
+}
+.btn-success{
+    background: $success-color;
+
+}
+.btn-success:hover{
+    background: $success-color-hover;
+}
+.btn-info {
+    background: $info-color;
+}
+.btn-info:hover {
+    background: $info-color-hover;
+}
+.btn-warning {
+    background: $warning-color;
+}
+.btn-warning:hover {
+    background: $warning-color-hover;
+}
+.btn-danger {
+    background: $danger-color;
+   
+}
+.btn-danger:hover {
+    background: $danger-color-hover;
+}
+.btn-link {
+    color: $link-color;
+}
+.btn-link:hover {
+    color: $link-color-hover;
+}
