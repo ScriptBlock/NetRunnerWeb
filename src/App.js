@@ -1,3 +1,5 @@
+
+
 /*
 possible refresh code
   React.useEffect(() => {
@@ -46,65 +48,179 @@ render(<Sandbox />);
 
 */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { v4 as uuidv4 } from 'uuid';
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
 
 import Header from './components/Header'
 import Button from './components/Button'
 import Initiative from './components/Initiative'
 import ProgramItem from './components/ProgramItem'
+import Netrunners from './components/Netrunners'
 
 
-function App() {
+function App(props) {
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [error, setError] = useState(null)
+  const [ownedCharacter, setOwnedCharacter] = useState(null)
 
+  let localID = localStorage.getItem('nruuid')
+  if(localID === null || localID === undefined) {
+    console.log("didn't find locally stored uuid")
+    localID = uuidv4()
+    localStorage.setItem("nruuid", localID)
+  }
 
-  const [init, setInit] = useState([
-    {
-        "id": 1,
-        "type": "ice",
-        "thingID": "2",
-        "order": 9
-    },{
-        "id": 2,
-        "type": "netrunner",
-        "thingID": "1",
-        "order": 19
-    },{
-        "id": 3,
-        "type": "netrunner",
-        "thingID": "2",
-        "order": 6
-    },{
-        "id": 4,
-        "type": "ice",
-        "thingID": "1",
-        "order": 22
-    }])
+  const [runners, setRunners] = useState([
+//    {"id": 1, "name": "CrashOverride", "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "mapid":1, "roomid":1, "discoveredrooms":[], "owner":0}
+  ])
 
-  const onInitClick = (e) => {
-    let newInitID = init.reduce((a,b)=>a.id>b.id?a:b).id + 1
-    setInit([...init, {"id": newInitID, "name": "roger", "init": 9}])
+  useEffect(() => {
+    fetch("http://localhost:3000/netrunner") 
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true)
+          setRunners(result)
+
+          let myRunner = runners.find(r=>r.owner == localID)
+          if(myRunner !== undefined) {
+            console.log("Found the character for you!")
+            setOwnedCharacter(myRunner.id)
+          } else {
+            console.log("Did not find a characrer you own")
+            setOwnedCharacter(null)  
+          }
+
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setIsLoaded(true)
+          setError(error)
+        }
+      )
+    }, [])
+
+  const [init, setInit] = useState([])
+  /*
+          {
+              "id": 1,
+              "type": "ice",
+              "thingID": "2",
+              "order": 9
+          },{
+              "id": 2,
+              "type": "netrunner",
+              "thingID": "1",
+              "order": 19
+          },{
+              "id": 3,
+              "type": "netrunner",
+              "thingID": "2",
+              "order": 6
+          },{
+              "id": 4,
+              "type": "ice",
+              "thingID": "1",
+              "order": 22
+          }])
+   */   
+  
+  
+
+  const newNetrunnerClick = (e) => {
+    console.log("new netrunner")
+    //make api call to make a new netrunner
+    setRunners([...runners, {"id": 2, "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "discoveredrooms":[], "owner":0} ])
+
+  }
+
+  const onRunnerNameChange = (e) => {
+    console.log(e.target.key)
+
+  }
+
+  const newInitItem = (e) => {
+    let newInitID = init.length > 0 ? init.reduce((a,b)=>a.id>b.id?a:b).id + 1 : 1
+    setInit([...init, {"id": newInitID, "name": "Unknown", "init": "top"}])
     console.log("List item clicked")
     console.log(e)
-}
-
+  }
 
   const onClick = () => {
     console.log("Button clicked")
   }
 
+  const chooseCharacter = (id) => {
+    fetch(`http://localhost:3000/netrunner/${id}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({owner: localID}),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      //send post to database to assign owner
+      console.log(`choosing owned character ${id}`)
+      setOwnedCharacter(id)
+      setRunners(data)
+    })
 
-  return (
-    <div className="container va11-theme mt-2" role="main">
-        <div className="page-header">
-            <h1>Welcome</h1>
-            <p>This theme inspired by video game - VA-11 Hall-A: Cyberpunk Bartender Action</p>
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  } else if (!isLoaded) {
+    return <div>Loading...</div>;
+  } else {
+
+    if(ownedCharacter === null) {
+      return (
+        <div className="container va11-theme mt-2" role="main">
+          <div className="page-header">
+            <h1>Pick Or Add A Character</h1>
+          </div>
+          <ul>
+            { runners.map((r) => (
+              <li key={r.id}><button className="btn btn-primary" onClick={() => chooseCharacter(r.id)}>{r.name}</button></li>
+               ))
+            }
+          </ul>
         </div>
-        <Header user='Nickoli' />
-        <ProgramItem />
-        <Initiative init={init} onClick={onInitClick}/>
-    </div>
-  );
+      )
+
+    } else {
+      return (
+        <div className="container va11-theme mt-2" role="main">
+            <div className="page-header">
+              <h1>NetrunnerWeb{runners.length}</h1>
+            </div>
+            <Netrunners runners={runners} newNetrunnerClick={newNetrunnerClick} onRunnerNameChange={onRunnerNameChange}/>
+        </div>
+      )
+    }
+  }
+
 }
-//        <Button onClick={onClick}/>
 
 export default App;
+
+
+/*
+        <Header user='Nickoli' />
+        <ProgramItem />        
+        <Initiative init={init} onClick={onInitClick}/>
+
+
+*/

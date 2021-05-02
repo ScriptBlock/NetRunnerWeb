@@ -19,7 +19,7 @@ const InitItem = (props) => {
 
     */
    return (
-   <div onClick={props.onClick} className="panel panel-success">
+   <div className="panel panel-success">
         <div className="panel-heading"><span className="panel-title">{props.data.name}</span></div>
         <div className="panel-body">
             <div>Init: {props.data.order} | Type: {props.data.type} </div>

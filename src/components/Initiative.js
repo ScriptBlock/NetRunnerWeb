@@ -1,20 +1,20 @@
+import { useState } from 'react'
+
 import InitItem from './InitItem'
 
 const Initiative = (props) => {
-/*
-{
-        "id": 1,
-        "type": "ice",
-        "thingID": "2",
-        "order": 9
-    }
-*/
-    const currentInitiative = props.init
+
+
     const runnersFromAPI = [
         {"id": 1, "name": "CrashOverride", "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "mapid":1, "roomid":1, "discoveredrooms":[]}
     ]
     
-    let buttonData = currentInitiative.map(i => {
+    
+    const raiseInitiative = (e) => {
+
+    }
+
+    let buttonData = props.init.map(i => {
         let runner = runnersFromAPI.find(r => r.id === Number(i.thingID))
         if(runner !== undefined) { 
             return {...runner, ...i}
@@ -22,6 +22,24 @@ const Initiative = (props) => {
             return {...i, "name": "nadda"}
         }
     })
+
+    return (
+        <div className="panel panel-primary">
+            <div className="panel-heading"><span className="panel-title">Initiative Members</span><button className="btn btn-warning" onClick={props.newInitItem}>New</button></div>
+            <div className="panel-body">
+                { buttonData.map((b) => (
+                    <InitItem key={b.id} data={b} />
+                ))
+                }
+            </div>
+        </div>
+    )
+}
+
+export default Initiative
+
+
+
 /*
     return (
         <div className="panel-primary">
@@ -56,17 +74,3 @@ const Initiative = (props) => {
                     </div>
                 </div>
 */
-    return (
-        <div className="panel panel-primary">
-            <div className="panel-heading"><h3 className="panel-title">Initiative Members</h3></div>
-            <div className="panel-body">
-                { buttonData.map((b) => (
-                    <InitItem key={b.id} data={b} onClick={props.onClick} />
-                ))
-                }
-            </div>
-        </div>
-    )
-}
-
-export default Initiative

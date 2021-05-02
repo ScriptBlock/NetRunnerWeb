@@ -1,0 +1,42 @@
+UI Components Priority/Hierarchy
+
+User
+
+Non-netrunner, non-blackice (i.e. - other players)
+
+Netrunner - has a user allocation/assignment
+
+
+Black Ice - has a room assignment
+
+Initiative - tracks other players, netrunner, and black ice constructs
+
+Map
+
+Room - has a map assignment
+
+    considerations: contents are just really a propery of a room whereas the netrunners can move through rooms
+
+
+Modes
+
+    DM - manage maps and room.
+        rezzing/placing black ice and assigning room contents
+        taking actions for black ice / demons
+
+    PC - taking actions for themselves - pathfind, cloak, slide, id, backdoor, rez programs (need to think about rezzing black ice)
+
+    All - initiative.  set / move / remove
+        considerations:  players can only affect their players - dm can change any
+
+    Layout options
+        for DM, architecture management - dedicated UI.
+
+        for gameplay
+            initial login (long term use state to auto login)
+            pick what resource to be assigned to (netrunner / nonnetrunner / dm) - or add new - dm can remove choices.  might need to have management UI
+            see list of all shown resources in list.  their item is editable.  can enter init number or click up and down arrows. 
+            on their turn, get list of actions in init window
+                non-netrunners: complete turn
+                runners: all actions from above + complete turn
+                all others, DM can complete turn

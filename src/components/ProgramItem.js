@@ -13,8 +13,8 @@ const ProgramItem = () => {
                         <tr>
                             <td style={{minWidth:"10px"}}>Atk</td>
                             <td style={{minWidth:"10px"}}>X</td>
-                            <td rowspan="3" style={{minWidth:"50%",height:"100%"}}><button style={{ height: "100%"}} className="btn btn-primary btn-block">Remove</button></td>
-                            <td rowspan="3" style={{minWidth:"50%",height:"100%"}}><button style={{ height: "100%"}} className="btn btn-warning btn-block">Remove</button></td> 
+                            <td rowSpan="3" style={{minWidth:"50%",height:"100%"}}><button style={{ height: "100%"}} className="btn btn-primary btn-block">Remove</button></td>
+                            <td rowSpan="3" style={{minWidth:"50%",height:"100%"}}><button style={{ height: "100%"}} className="btn btn-warning btn-block">Remove</button></td> 
 
                         </tr>
                         <tr>
