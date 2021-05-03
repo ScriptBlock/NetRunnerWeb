@@ -8,14 +8,19 @@ import Header from './components/Header'
 import Button from './components/Button'
 import ProgramItem from './components/ProgramItem'
 */
+import Home from './components/Home'
+import CharacterPicker from './components/CharacterPicker'
 import Netrunners from './components/Netrunners'
 import Initiative from './components/Initiative'
 
 
 function App() {
+  const [fetchRunners, setFetchRunners] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const [error, setError] = useState(null)
   const [ownedCharacter, setOwnedCharacter] = useState(null)
+
+  const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
   let localID = localStorage.getItem('nruuid')
   if(localID === null || localID === undefined) {
@@ -28,6 +33,25 @@ function App() {
 //    {"id": 1, "name": "CrashOverride", "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "mapid":1, "roomid":1, "discoveredrooms":[], "owner":0}
   ])
 
+
+  let refreshRunners = () => {
+    fetch("http://localhost:3000/netrunner") 
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setRunners(result)
+          console.log("refreshed netrunner list")
+          const refresh = setTimeout(() => refreshRunners(), 2000)
+        }
+      )
+  }
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setFetchRunners(!fetchRunners), 2000);
+    return () => clearTimeout(timeout);
+  }, [fetchRunners]);
+
+
   useEffect(() => {
     fetch("http://localhost:3000/netrunner") 
       .then(res => res.json())
@@ -35,6 +59,8 @@ function App() {
         (result) => {
           setIsLoaded(true)
           setRunners(result)
+
+          refreshRunners()
 
           console.log("lets see what's in runners")
           console.log(runners)
@@ -87,30 +113,6 @@ function App() {
           }])
    */   
   
-  let Home = () => 
-    <>
-      <div className="page-header">
-          <h1>Player Actions</h1>
-      </div>
-      <div className="row">
-          <div className="col-sm-4">
-              <div className="list-group">
-                  <a href="/init" className="list-group-item">
-                      <h4 className="list-group-item-heading">Initiative Listing</h4>
-                      <p className="list-group-item-text">Go to the initiative screen</p>
-                  </a>
-                  <a href="#" className="list-group-item">
-                      <h4 className="list-group-item-heading">Change My Settings</h4>
-                      <p className="list-group-item-text">Change your character options</p>
-                  </a>
-                  <a href="/" className="list-group-item" onClick={() => releaseCharacter(ownedCharacter)}>
-                      <h4 className="list-group-item-heading">Release ownership of this character</h4>
-                      <p className="list-group-item-text">Go back to the character selection screen</p>
-                  </a>
-              </div>
-          </div>
-      </div>     
-    </>
 
   const newNetrunnerClick = (e) => {
     console.log("new netrunner")
@@ -136,11 +138,7 @@ function App() {
   }
 
   const chooseCharacter = (id) => {
-    fetch(`http://localhost:3000/netrunner/${id}`, {
-        method: "POST",
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({owner: localID}),
-    })
+    fetch(`http://localhost:3000/netrunner/${id}`, { ...dp, body: JSON.stringify({owner: localID})})
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
@@ -152,11 +150,7 @@ function App() {
   }
 
   const releaseCharacter = (id) => {
-    fetch(`http://localhost:3000/netrunner/${id}`, {
-        method: "POST",
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({owner: 0}),
-    })
+    fetch(`http://localhost:3000/netrunner/${id}`, {...dp, body: JSON.stringify({owner: 0})})
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
@@ -165,10 +159,20 @@ function App() {
       setOwnedCharacter(null)
       setRunners(data)
     })
+  }
 
+  const addNewRunnerByName = (newName) => {
+    fetch("http://localhost:3000/netrunner", { ...dp, body: JSON.stringify({name: newName, owner: localID })})
+    .then(response => response.json())
+    .then(data => {
+      console.log("succcess")
+      let id = data.find(r => r.name === newName).id
+      console.log(`found new character ${id}`)
+      setRunners(data)
 
+      setOwnedCharacter(id)
+    })
     
-
   }
 
   if (error) {
@@ -179,23 +183,13 @@ function App() {
 
     if(ownedCharacter === null) {
       return (
-        <div className="container va11-theme mt-2" role="main">
-          <div className="page-header">
-            <h1>Pick Or Add A Character</h1>
-          </div>
-          <ul>
-            { runners.map((r) => (
-              <li key={r.id}><button className="btn btn-primary" onClick={() => chooseCharacter(r.id)}>{r.name}</button></li>
-               ))
-            }
-          </ul>
-        </div>
+        <CharacterPicker chooseCharacter={chooseCharacter} runners={runners} addNewRunnerByName={addNewRunnerByName}/>
       )
 
     } else {
       return (
         <Router>
-          <Home path="/"/>
+          <Home path="/" releaseCharacter={releaseCharacter} ownedCharacter={ownedCharacter} runners={runners}/>
           <Initiative path="/init" init={init} />
 
         </Router>
