@@ -12,10 +12,12 @@ import Home from './components/Home'
 import CharacterPicker from './components/CharacterPicker'
 import Netrunners from './components/Netrunners'
 import Initiative from './components/Initiative'
+import CharacterEdit from './components/CharacterEdit';
 
 
 function App() {
-  const [fetchRunners, setFetchRunners] = useState(false)
+  //const [fetchRunners, setFetchRunners] = useState(false)
+  const [refreshRunnersActive, setRefreshRunnersActive] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
   const [error, setError] = useState(null)
   const [ownedCharacter, setOwnedCharacter] = useState(null)
@@ -41,15 +43,17 @@ function App() {
         (result) => {
           setRunners(result)
           console.log("refreshed netrunner list")
-          const refresh = setTimeout(() => refreshRunners(), 2000)
+          if(refreshRunnersActive) {
+            const refresh = setTimeout(() => refreshRunners(), 2000)
+          }
         }
       )
   }
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setFetchRunners(!fetchRunners), 2000);
-    return () => clearTimeout(timeout);
-  }, [fetchRunners]);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => setFetchRunners(!fetchRunners), 2000);
+  //   return () => clearTimeout(timeout);
+  // }, [fetchRunners]);
 
 
   useEffect(() => {
@@ -60,7 +64,9 @@ function App() {
           setIsLoaded(true)
           setRunners(result)
 
-          refreshRunners()
+          if(refreshRunnersActive) {
+            //refreshRunners()
+          }
 
           console.log("lets see what's in runners")
           console.log(runners)
@@ -144,6 +150,7 @@ function App() {
       console.log('Success:', data);
       //send post to database to assign owner
       console.log(`choosing owned character ${id}`)
+      setRefreshRunnersActive(false)
       setOwnedCharacter(id)
       setRunners(data)
     })
@@ -156,6 +163,7 @@ function App() {
       console.log('Success:', data);
       //send post to database to assign owner
       console.log(`clearing ownership for ${id}`)
+      setRefreshRunnersActive(false)
       setOwnedCharacter(null)
       setRunners(data)
     })
@@ -183,7 +191,7 @@ function App() {
 
     if(ownedCharacter === null) {
       return (
-        <CharacterPicker chooseCharacter={chooseCharacter} runners={runners} addNewRunnerByName={addNewRunnerByName}/>
+        <CharacterPicker chooseCharacter={chooseCharacter} addNewRunnerByName={addNewRunnerByName}/>
       )
 
     } else {
@@ -191,7 +199,7 @@ function App() {
         <Router>
           <Home path="/" releaseCharacter={releaseCharacter} ownedCharacter={ownedCharacter} runners={runners}/>
           <Initiative path="/init" init={init} />
-
+          <CharacterEdit path="/charedit" ownedCharacter={ownedCharacter}/>
         </Router>
       )
     }
@@ -200,6 +208,13 @@ function App() {
 }
 
 export default App;
+
+// if(ownedCharacter === null) {
+//   return (
+//     <CharacterPicker chooseCharacter={chooseCharacter} runners={runners} addNewRunnerByName={addNewRunnerByName}/>
+//   )
+
+
 
 /*
 

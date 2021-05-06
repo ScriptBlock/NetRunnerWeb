@@ -1,10 +1,30 @@
 
 const Home = (props) => {
+    let me = props.runners.find(r=>r.id===props.ownedCharacter)
+
     return (
         <div className="container va11-theme mt-2" role="main">
 
             <div className="page-header">
-                <h1>Player Actions for {props.runners.find(r=>r.id===props.ownedCharacter).name}</h1>
+                <h1>Player Actions for {me.name}</h1>
+                <table className="table">
+                    <thead>
+                        <tr style={{backgroundColor:"#fff", color:"#000"}}>
+                            <td>Interface</td>
+                            <td>Slots</td>
+                            <td>Speed</td>
+                            <td>Damage</td>
+                        </tr>
+                    </thead>
+                    <tbody style={{backgroundColor:"#00f", color:"#fff"}}>
+                        <tr>
+                            <td>{me.interface}</td>
+                            <td>{me.totalSlots}</td>
+                            <td>{me.speed}</td>
+                            <td>{me.damage}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div className="row">
                 <div className="col-sm-4">
@@ -13,7 +33,7 @@ const Home = (props) => {
                             <h4 className="list-group-item-heading">Initiative Listing</h4>
                             <p className="list-group-item-text">Go to the initiative screen</p>
                         </a>
-                        <a href="#" className="list-group-item">
+                        <a href="/charedit" className="list-group-item">
                             <h4 className="list-group-item-heading">Change My Settings</h4>
                             <p className="list-group-item-text">Change your character options</p>
                         </a>
