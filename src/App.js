@@ -21,6 +21,8 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [error, setError] = useState(null)
   const [ownedCharacter, setOwnedCharacter] = useState(null)
+  const [page, setPage] = useState("home")
+  const [myRunner, setMyRunner] = useState(null)
 
   const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
@@ -42,18 +44,24 @@ function App() {
       .then(
         (result) => {
           setRunners(result)
+          let mr = result.find(r=>r.owner == localID)
+          setMyRunner(mr)
+
           console.log("refreshed netrunner list")
-          if(refreshRunnersActive) {
-            const refresh = setTimeout(() => refreshRunners(), 2000)
-          }
+          // if(refreshRunnersActive) {
+          //   const refresh = setTimeout(() => refreshRunners(), 2000)
+          // }
         }
       )
   }
 
-  // useEffect(() => {
+  useEffect(() => {
+    console.log("calling useeffect because runners changed")
   //   const timeout = setTimeout(() => setFetchRunners(!fetchRunners), 2000);
   //   return () => clearTimeout(timeout);
-  // }, [fetchRunners]);
+      let mr = runners.find(r=>r.owner == localID)
+      setMyRunner(mr)
+}, [runners]);
 
 
   useEffect(() => {
@@ -74,10 +82,11 @@ function App() {
           console.log("what's your uuid")
           console.log(localID)
 
-          let myRunner = result.find(r=>r.owner == localID)
-          if(myRunner !== undefined) {
+          let mr = result.find(r=>r.owner == localID)
+          setMyRunner(mr)
+          if(mr !== undefined) {
             console.log("Found the character for you!")
-            setOwnedCharacter(myRunner.id)
+            setOwnedCharacter(mr.id)
           } else {
             console.log("Did not find a characrer you own")
             setOwnedCharacter(null)  
@@ -150,7 +159,7 @@ function App() {
       console.log('Success:', data);
       //send post to database to assign owner
       console.log(`choosing owned character ${id}`)
-      setRefreshRunnersActive(false)
+      //setRefreshRunnersActive(false)
       setOwnedCharacter(id)
       setRunners(data)
     })
@@ -195,19 +204,30 @@ function App() {
       )
 
     } else {
-      return (
-        <Router>
-          <Home path="/" releaseCharacter={releaseCharacter} ownedCharacter={ownedCharacter} runners={runners}/>
-          <Initiative path="/init" init={init} />
-          <CharacterEdit path="/charedit" ownedCharacter={ownedCharacter}/>
-        </Router>
-      )
+      if(page == "home") {
+        return (<Home releaseCharacter={releaseCharacter} ownedCharacter={ownedCharacter} runners={runners} setPage={setPage}/>)
+      }
+      if(page == "settings") {
+        return (<CharacterEdit myRunner={myRunner} ownedCharacter={ownedCharacter} refreshRunners={refreshRunners}  setPage={setPage}/>)  
+      }
+
     }
   }
 
 }
 
 export default App;
+
+
+// return (
+//   <Router>
+//     <Home path="/" releaseCharacter={releaseCharacter} ownedCharacter={ownedCharacter} runners={runners}/>
+//     <Initiative path="/init" init={init} />
+//     <CharacterEdit path="/charedit" runners={runners} ownedCharacter={ownedCharacter} refreshRunners={refreshRunners}/>
+//   </Router>
+// )
+
+
 
 // if(ownedCharacter === null) {
 //   return (

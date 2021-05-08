@@ -33,14 +33,14 @@ const Home = (props) => {
                             <h4 className="list-group-item-heading">Initiative Listing</h4>
                             <p className="list-group-item-text">Go to the initiative screen</p>
                         </a>
-                        <a href="/charedit" className="list-group-item">
+                        <button className="list-group-item" onClick={() => props.setPage("settings")}>
                             <h4 className="list-group-item-heading">Change My Settings</h4>
                             <p className="list-group-item-text">Change your character options</p>
-                        </a>
-                        <a href="/" className="list-group-item" onClick={() => props.releaseCharacter(props.ownedCharacter)}>
+                        </button>
+                        <button className="list-group-item" onClick={() => props.releaseCharacter(props.ownedCharacter)}>
                             <h4 className="list-group-item-heading">Release ownership of this character</h4>
                             <p className="list-group-item-text">Go back to the character selection screen</p>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>     
