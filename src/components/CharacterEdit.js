@@ -75,23 +75,23 @@ const CharacterEdit = (props) => {
                 
             <h1 className="mb-3">Update Character {thisRunner.name}</h1>
             <div className="row">
-                <div className="col text-center"><h3>Character Type</h3><hr/></div>
+                <div className="col text-center border bg-secondary"><h3>Character Type</h3><hr/></div>
             </div>
-            <div className="row mb-3 d-flex justify-content-center text-center">
-                <div className="col">
+            <div className="row mb-3 d-flex justify-content-center text-center bg-dark text-info">
+                <div className="col py-3">
                     <select name="chartype" onChange={changeCharType} style={{color:"#000"}} value={thisRunner.type}>
                         <option value="Netrunner">Netrunner</option>
                         <option value="Other">Other</option>
                     </select>
                 </div>
-                <div className="col">
+                <div className="col py-3">
                     {thisRunner.type}
                 </div>
             </div>
             <div className="row">
-                <div className="col text-center"><h3>Interface</h3><hr/></div>
+                <div className="col text-center bg-secondary border"><h3>Interface</h3><hr/></div>
             </div>
-            <div className="row text-center d-flex justify-content-center mb-2">
+            <div className="row text-center d-flex justify-content-center py-2 bg-dark text-info">
                 <div className="col-sm-3">
                     <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (decreaseAttribute("interface"))}>Less</button>
                 </div>
@@ -105,7 +105,7 @@ const CharacterEdit = (props) => {
             </div>
 
 
-            <div className="row text-center d-flex justify-content-center mb-2">
+            <div className="row text-center d-flex justify-content-center py-2 bg-dark text-info">
                 <div className="col-sm-3">
                     <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (decreaseAttribute("totalSlots"))}>Less</button>
                 </div>
@@ -118,7 +118,7 @@ const CharacterEdit = (props) => {
                 </div>
             </div>
 
-            <div className="row text-center d-flex justify-content-center mb-2">
+            <div className="row text-center d-flex justify-content-center py-2 bg-dark text-info">
                 <div className="col-sm-3">
                     <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (decreaseAttribute("speed"))}>Less</button>
                 </div>
@@ -131,7 +131,7 @@ const CharacterEdit = (props) => {
                 </div>
             </div>
 
-            <div className="row text-center d-flex justify-content-center mb-2">
+            <div className="row text-center d-flex justify-content-center py-2 bg-dark text-info">
                 <div className="col-sm-3">
                     <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (decreaseAttribute("damage"))}>Less</button>
                 </div>
@@ -145,7 +145,7 @@ const CharacterEdit = (props) => {
             </div>
 
 
-            <div className="row mt-5">
+            <div className="row">
                 <div className="col">
                     <hr/>
                     <button onClick={() => (props.setPage("home"))} className="btn btn-primary" style={{width:"100%"}}>Home</button>

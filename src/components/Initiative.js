@@ -1,76 +1,49 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import InitItem from './InitItem'
 
 const Initiative = (props) => {
 
 
-    const runnersFromAPI = [
-        {"id": 1, "name": "CrashOverride", "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "mapid":1, "roomid":1, "discoveredrooms":[]}
-    ]
-    
-    
-    const raiseInitiative = (e) => {
+    useEffect(() => {
+        const interval = setInterval(() => {
+            fetch(`http://localhost:3000/initiative?sort=true`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("fetched initiative")
+                console.log(data)
+            })
+        }, 2000);
+        return () => clearInterval(interval);
+    }, []);
 
-    }
-
-    let buttonData = props.init.map(i => {
-        let runner = runnersFromAPI.find(r => r.id === Number(i.thingID))
-        if(runner !== undefined) { 
-            return {...runner, ...i}
-        } else {
-            return {...i, "name": "nadda"}
-        }
-    })
 
     return (
-        <div className="panel panel-primary">
-            <div className="panel-heading"><span className="panel-title">Initiative Members</span><button className="btn btn-warning" onClick={props.newInitItem}>New</button></div>
-            <div className="panel-body">
-                { buttonData.map((b) => (
-                    <InitItem key={b.id} data={b} />
-                ))
-                }
+        <div className="container" role="main">
+            <div className="row justify-content-center text-center bg-secondary p-2">
+                <div className="col">
+                    <button className="btn btn-info btn-block mt-2">Enter At Top</button>
+                </div>    
+                <div className="col">
+                    <h1 className="text-center bg-secondary text-white">Initiative</h1>
+                </div>
+                <div className="col">
+                    <button className="btn btn-info btn-block mt-2">Enter Here</button>
+                </div>
             </div>
+            <div className="row justify-content-center text-center bg-secondary p-2 my-1">
+
+            </div>
+            <div className="row">
+                <div className="col">
+                    <hr/>
+                    <button onClick={() => (props.setPage("home"))} className="btn btn-primary" style={{width:"100%"}}>Home</button>
+                </div>
+            </div>
+
         </div>
     )
 }
 
 export default Initiative
 
-
-
-/*
-    return (
-        <div className="panel-primary">
-            <div className="panel-heading">Initiative Members</div>
-            <div className="panel-body">
-                <div className="list-group">
-                    { buttonData.map((b) => (
-                        <InitItem data={b} onClick={props.onClick} />
-                    ))
-                    }
-                </div>
-            </div>
-        </div>
-    )
-*/
-
-/*
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Panel title</h3>
-                    </div>
-                    <div class="panel-body">
-                        Panel content
-                    </div>
-                </div>
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Panel title</h3>
-                    </div>
-                    <div class="panel-body">
-                        Panel content
-                    </div>
-                </div>
-*/

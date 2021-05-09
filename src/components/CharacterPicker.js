@@ -9,17 +9,19 @@ const CharacterPicker = (props) => {
           .then(res => res.json())
           .then(
             (result) => {
-              setRunners(result)
-              console.log("refreshed netrunner list")
-              //setTimeout(() => refreshRunners(), 2000)
+                setRunners(result)
+                console.log("refreshed netrunner list")
             }
           )
     }
     
     useEffect(() => {
-        console.log("caling charpicker useeffect")
-        refreshRunners()
-    }, [])
+        const interval = setInterval(() => {
+            console.log("refreshing netrunners in charpicker")
+            refreshRunners()
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     const [newName, setNewName] = useState('')
 
@@ -30,15 +32,13 @@ const CharacterPicker = (props) => {
 
     if(runners !== null) {
         return (
-            <div className="container va11-theme mt-2" role="main">
-                <div className="page-header">
-                    <h1>Pick Or Add A Character</h1>
-                </div>
+            <div className="container justify-content-center text-center" role="main">
+                <h1 className="bg-dark text-info py-3">Pick Or Add A Character</h1>
                 <div className="row">
-                    <div className="col-lg-4">
+                    <div className="col">
                         <div className="list-group">
                             { runners.map((r) => (
-                                <button key={r.id} className="list-group-item btn" onClick={() => props.chooseCharacter(r.id)}>
+                                <button key={r.id} className="list-group-item btn bg-dark text-info my-1" onClick={() => props.chooseCharacter(r.id)}>
                                     <h4 className="list-group-item-heading">{r.name}</h4>
                                     <p className="list-group-item-text">Character is a: {r.type} and owned by: {r.owner}</p>
                                 </button>
@@ -47,14 +47,12 @@ const CharacterPicker = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-lg-4">
-                        <div className="panel panel-success">
-                            <div className="panel-heading"><span className="panel-title">Create A New Character To Track</span></div>
-                            <div className="panel-body">
-                                <input type="text" name="newcharinputname" onChange={updateName}/><hr/>
-                                <button className="btn btn-primary" onClick={() => (props.addNewRunnerByName(newName))}>Add</button>
-                            </div>
+                <div className="row mt-3">
+                    <div className="col">
+                        <div className="bg-secondary text-dark py-3">Create A New Character To Track</div>
+                        <div className="bg-dark text-info pt-3">
+                            <div className="px-5 mt-2"><input className="input text-center h2" style={{width:"100%", height:"50px"}} type="text" name="newcharinputname" onChange={updateName}/></div>
+                            <div className="px-5 mt-2"><button className="btn btn-primary btn-block" onClick={() => (props.addNewRunnerByName(newName))}>Add</button></div>
                         </div>
                     </div>
                 </div>

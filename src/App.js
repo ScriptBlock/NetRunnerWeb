@@ -23,7 +23,6 @@ function App() {
   const [ownedCharacter, setOwnedCharacter] = useState(null)
   const [page, setPage] = useState("home")
   const [myRunner, setMyRunner] = useState(null)
-
   const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
   let localID = localStorage.getItem('nruuid')
@@ -36,6 +35,7 @@ function App() {
   const [runners, setRunners] = useState([
 //    {"id": 1, "name": "CrashOverride", "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "mapid":1, "roomid":1, "discoveredrooms":[], "owner":0}
   ])
+
 
 
   let refreshRunners = () => {
@@ -132,7 +132,7 @@ function App() {
   const newNetrunnerClick = (e) => {
     console.log("new netrunner")
     //make api call to make a new netrunner
-    setRunners([...runners, {"id": 2, "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "discoveredrooms":[], "owner":0} ])
+    setRunners([...runners, {"id": 2, "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "discoveredrooms":[], "owner":0, "type":"Other"} ])
 
   }
 
@@ -210,7 +210,9 @@ function App() {
       if(page == "settings") {
         return (<CharacterEdit myRunner={myRunner} ownedCharacter={ownedCharacter} refreshRunners={refreshRunners}  setPage={setPage}/>)  
       }
-
+      if(page == "init") {
+        return (<Initiative runners={runners}  setPage={setPage}/>)
+      }
     }
   }
 
