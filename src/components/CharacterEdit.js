@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 
 const CharacterEdit = (props) => {
 
+    const [thisRunner, setThisRunner] = useState(props.myRunner)
+
     const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
     const changeCharType = (e) => {
@@ -13,11 +15,13 @@ const CharacterEdit = (props) => {
         ))
         console.log(newRunners)
 */
+        setThisRunner({...thisRunner, type: e.target.value})
         fetch(`http://localhost:3000/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify({type: e.target.value}) })
         .then(response => response.json())
         .then(data => {
             console.log("updated character")
             props.refreshRunners()
+            setThisRunner({...thisRunner, type: data.find(r => r.id == props.ownedCharacter).type})
         })    
     }
 
@@ -26,30 +30,124 @@ const CharacterEdit = (props) => {
         props.setPage("home")
     }
 
+    let decreaseAttribute = (attrib) => {
+        console.log(`decrease attribute ${attrib}`)
+        let newValue = thisRunner[attrib] -= 1
+        console.log(newValue)
+
+        let param = {}
+        param[attrib] = newValue
+        fetch(`http://localhost:3000/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify(param) })
+        .then(response => response.json())
+        .then(data => {
+            console.log("updated character")
+            props.refreshRunners()
+            let newRunner = thisRunner
+            newRunner[attrib] = newValue
+            setThisRunner(newRunner)
+        })    
+
+    }
+
+
+    let increaseAttribute = (attrib) => {
+        console.log(`increase attribute ${attrib}`)
+        let newValue = thisRunner[attrib] += 1
+        console.log(newValue)
+
+        let param = {}
+        param[attrib] = newValue
+        fetch(`http://localhost:3000/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify(param) })
+        .then(response => response.json())
+        .then(data => {
+            console.log("updated character")
+            props.refreshRunners()
+            let newRunner = thisRunner
+            newRunner[attrib] = newValue
+            setThisRunner(newRunner)
+        })    
+
+        
+    }
 
     return (
-        <div className="container va11-theme mt-2" role="main">
-            <div className="page-header">
-                <h1>Edit Character Attributes</h1>
-            </div>
+        <div className="container" role="main"> 
+                
+            <h1 className="mb-3">Update Character {thisRunner.name}</h1>
             <div className="row">
-                <div className="col-sm-4">
-                    <table className="table">
-                        <tr><td><h1>Type</h1></td></tr>
-                        <tr>
-                            <td>
-                                <select name="chartype" onChange={changeCharType} style={{color:"#000"}}>
-                                    <option value="Netrunner">Netrunner</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </td>
-                            <td>{props.myRunner.type}</td>
-                        </tr>
-                    </table>
+                <div className="col text-center"><h3>Character Type</h3><hr/></div>
+            </div>
+            <div className="row mb-3 d-flex justify-content-center text-center">
+                <div className="col">
+                    <select name="chartype" onChange={changeCharType} style={{color:"#000"}} value={thisRunner.type}>
+                        <option value="Netrunner">Netrunner</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div className="col">
+                    {thisRunner.type}
                 </div>
             </div>
             <div className="row">
-                <div className="col-lg-4">
+                <div className="col text-center"><h3>Interface</h3><hr/></div>
+            </div>
+            <div className="row text-center d-flex justify-content-center mb-2">
+                <div className="col-sm-3">
+                    <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (decreaseAttribute("interface"))}>Less</button>
+                </div>
+                <div className="col-sm-3">
+                    <div>Interface</div>
+                    <div>{thisRunner.interface}</div>
+                </div>
+                <div className="col-sm-3">
+                    <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (increaseAttribute("interface"))}>More</button>
+                </div>
+            </div>
+
+
+            <div className="row text-center d-flex justify-content-center mb-2">
+                <div className="col-sm-3">
+                    <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (decreaseAttribute("totalSlots"))}>Less</button>
+                </div>
+                <div className="col-sm-3">
+                    <div>Total Slots</div>
+                    <div>{thisRunner.totalSlots}</div>
+                </div>
+                <div className="col-sm-3">
+                    <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (increaseAttribute("totalSlots"))}>More</button>
+                </div>
+            </div>
+
+            <div className="row text-center d-flex justify-content-center mb-2">
+                <div className="col-sm-3">
+                    <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (decreaseAttribute("speed"))}>Less</button>
+                </div>
+                <div className="col-sm-3">
+                    <div>Speed</div>
+                    <div>{thisRunner.speed}</div>
+                </div>
+                <div className="col-sm-3">
+                    <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (increaseAttribute("speed"))}>More</button>
+                </div>
+            </div>
+
+            <div className="row text-center d-flex justify-content-center mb-2">
+                <div className="col-sm-3">
+                    <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (decreaseAttribute("damage"))}>Less</button>
+                </div>
+                <div className="col-sm-3">
+                    <div>Damage</div>
+                    <div>{thisRunner.damage}</div>
+                </div>
+                <div className="col-sm-3">
+                    <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (increaseAttribute("damage"))}>More</button>
+                </div>
+            </div>
+
+
+            <div className="row mt-5">
+                <div className="col">
+                    <hr/>
                     <button onClick={() => (props.setPage("home"))} className="btn btn-primary" style={{width:"100%"}}>Home</button>
                 </div>
             </div>
