@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 
 const InitItem = (props) => {
     const [thisItem, setThisItem] = useState({})
+    const [selfBadge, setSelfBadge] = useState(false)
     
     //<InitItem key={i.id} runners={props.runners} ownedCharacter={props.ownedCharacter} initItem={i}/>
     
@@ -15,7 +16,9 @@ const InitItem = (props) => {
         // let thisThing = {}
         // if(props.i.type)
         if(props.initItem.type == "netrunner") {
-            setThisItem(props.runners.find(r => r.id == props.initItem.thingID))
+            let temp = props.runners.find(r => r.id == props.initItem.thingID)
+            setThisItem(temp)
+            setSelfBadge(temp.id == props.ownedCharacter)
         }        
     }, [props.initItem])
 
@@ -38,13 +41,27 @@ const InitItem = (props) => {
             speedField += "N/A"
         }
 
+        let badge=""
+        if(props.ownedCharacter == thisItem.id) {
+            badge = <span className="badge badge-primary">Me!</span>
+        } else {
+        //TODO if this thing is an enemy of me, mark as enemy 
+            badge = <span className="badge badge-danger">Danger</span>
+        }
+
+        if(true) { //TODO if current initiative turn is this one
+            badge = <>{badge}<span className="badge badge-warning">Active</span></>
+        }
+
+
         return (
             <div className="list-group-item py-1 my-1">
                 <div className="row">
+                    <div className="col-1 justify-content-left text-left">{ badge }</div>
                     <div className="col">{thisItem.name}</div>
                     <div className="col">{ speedField }</div>
                     <div className="col">{thisItem.type}</div>
-                    <div className="col">Col4</div>
+                    <div className="col">{props.initItem.order}</div>
                 </div>
             </div>
         )

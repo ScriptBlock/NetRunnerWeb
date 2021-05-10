@@ -2,6 +2,9 @@
 const Home = (props) => {
     let me = props.runners.find(r=>r.id===props.ownedCharacter)
 
+    console.log("in home render... ")
+    console.log(props.ownedCharacter)
+
     return (
         <div className="container" role="main">
             <h1>Player Actions for {me.name}</h1>

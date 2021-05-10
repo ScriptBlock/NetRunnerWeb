@@ -17,7 +17,7 @@ import CharacterEdit from './components/CharacterEdit';
 
 function App() {
   //const [fetchRunners, setFetchRunners] = useState(false)
-  const [localID, setLocalID] = useState()
+  const [localID, setLocalID] = useState(undefined)
   const [refreshRunnersActive, setRefreshRunnersActive] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
   const [error, setError] = useState(null)
@@ -72,15 +72,12 @@ function App() {
 
   useEffect(() => {
     let storedLocalID = localStorage.getItem('nruuid') 
-    if(storedLocalID == null || storedLocalID == undefined || storedLocalID == "null" || storedLocalID == "undefined") {
+    setLocalID(storedLocalID)
+    if(storedLocalID === null || storedLocalID === undefined) {
       console.log("didn't find locally stored uuid")
       // localID = uuidv4()
       setLocalID(uuidv4())
       localStorage.setItem("nruuid", localID)
-    } else {
-      console.log("found a locally stored nruuid")
-      setLocalID(storedLocalID)
-      console.log(storedLocalID)
     }
   
 
@@ -91,6 +88,9 @@ function App() {
           setIsLoaded(true)
           setRunners(result)
 
+          if(refreshRunnersActive) {
+            //refreshRunners()
+          }
 
           console.log("lets see what's in runners")
           console.log(runners)
@@ -117,18 +117,7 @@ function App() {
           setError(error)
         }
       )
-    
-    const interval = setInterval(() => {
-      fetch(`http://${SERVER_ADDRESS}:3000/netrunner`) 
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setRunners(result)
-        })
-    }, 2000);
-    return () => clearInterval(interval);
-  
-  }, [])
+    }, [])
 
   const [init, setInit] = useState([])
   /*

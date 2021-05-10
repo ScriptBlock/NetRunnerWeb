@@ -66,16 +66,24 @@ const Initiative = (props) => {
                     <div className="list-group">
                         <div className="list-group-item bg-dark text-info py-1 my-1">
                             <div className="row">
+                                <div className="col-1">&nbsp;</div>
                                 <div className="col">Name</div>
                                 <div className="col">Speed/Reflex</div>
                                 <div className="col">Type</div>
-                                <div className="col">Actions</div>
+                                <div className="col">Order</div>
                             </div>
                         </div>
                         {
-                            init.map((i) => (
+                            init.length > 0 ? init.map((i) => (
                                 <InitItem key={i.id} runners={props.runners} ownedCharacter={props.ownedCharacter} initItem={i}/>
-                            ))
+                            )) : (
+                                <div className="list-group-item py-1 my-1">
+                                    <div className="row">
+                                        <div className="col">No data</div>
+                                    </div>
+                                </div>
+                
+                            )
                         }
                     </div>
                 </div>
