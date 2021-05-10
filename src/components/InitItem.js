@@ -16,7 +16,9 @@ const InitItem = (props) => {
         // let thisThing = {}
         // if(props.i.type)
         if(props.initItem.type == "netrunner") {
-            let temp = props.runners.find(r => r.id == props.initItem.thingID)
+            let temp = props.runners.find(r => r.id != undefined && r.id == props.initItem.thingID)
+            console.log(temp)
+            
             setThisItem(temp)
             setSelfBadge(temp.id == props.ownedCharacter)
         }        

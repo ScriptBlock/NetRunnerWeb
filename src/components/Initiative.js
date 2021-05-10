@@ -5,18 +5,39 @@ import InitItem from './InitItem'
 const Initiative = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
 
-    const [myRunner, setMyRunner] = useState(null)
+    // const [myRunner, setMyRunner] = useState(null)
     const [init, setInit] = useState([])
 
     const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
+    function getRandomIntInclusive(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
+      }
+
+    const rollInit = () => {
+        let thisRunner = props.runners.find(r => r.id == props.ownedCharacter)
+
+        if(thisRunner != undefined) {
+            let roll = getRandomIntInclusive(1,10)
+            console.log(`random roll is ${roll}`)
+            console.log(`${roll} + ${thisRunner.reflex} = `)
+            roll = roll + thisRunner.reflex
+            console.log(roll)
+            fetch(`http://${SERVER_ADDRESS}:3000/initiative/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify({roll: roll}) })
+            .then(response => response.json())
+            .then(data => {
+                console.log(`entered at ${roll}`)
+            })
+        }
+    }
 
     const enterInitAtTop = () => {
         console.log(`entering player ${props.ownedCharacter} into top of initiative`)
 
         //app.post("/initiative/:initType/:id", (req, res, next) => {
 
-        let thisRunner = props.runners.find(r => r.id == props.ownedCharacter)
 
         fetch(`http://${SERVER_ADDRESS}:3000/initiative/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify({roll: "top"}) })
         .then(response => response.json())
@@ -31,8 +52,8 @@ const Initiative = (props) => {
         fetch(`http://${SERVER_ADDRESS}:3000/initiative?sort=true`)
         .then(response => response.json())
         .then(data => {
-            console.log("fetched initiative")
-            console.log(data)
+            // console.log("fetched initiative")
+            // console.log(data)
             setInit(data)
         })
 
@@ -40,7 +61,7 @@ const Initiative = (props) => {
             fetch(`http://${SERVER_ADDRESS}:3000/initiative?sort=true`)
             .then(response => response.json())
             .then(data => {
-                console.log("fetched initiative")
+                // console.log("fetched initiative")
                 setInit(data)
             })
         }, 1000);
@@ -58,7 +79,7 @@ const Initiative = (props) => {
                     <h1 className="text-center bg-secondary text-white">Initiative</h1>
                 </div>
                 <div className="col">
-                    <button className="btn btn-info btn-block mt-2">Roll Init</button>
+                    <button className="btn btn-info btn-block mt-2" onClick={() => rollInit()}>Roll Init</button>
                 </div>
             </div>
             <div className="row justify-content-center text-center bg-secondary p-2 my-1">

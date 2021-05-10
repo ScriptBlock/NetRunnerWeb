@@ -4,26 +4,26 @@ const CharacterPicker = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
 
     //let runners = props.runners
-    const [runners, setRunners] = useState(null)
+    //const [runners, setRunners] = useState(null)
 
-    let refreshRunners = () => {
-        fetch(`http://${SERVER_ADDRESS}:3000/netrunner`) 
-          .then(res => res.json())
-          .then(
-            (result) => {
-                setRunners(result)
-                console.log("refreshed netrunner list")
-            }
-          )
-    }
+    // let refreshRunners = () => {
+    //     fetch(`http://${SERVER_ADDRESS}:3000/netrunner`) 
+    //       .then(res => res.json())
+    //       .then(
+    //         (result) => {
+    //             setRunners(result)
+    //             console.log("refreshed netrunner list")
+    //         }
+    //       )
+    // }
     
-    useEffect(() => {
-        const interval = setInterval(() => {
-            console.log("refreshing netrunners in charpicker")
-            refreshRunners()
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         console.log("refreshing netrunners in charpicker")
+    //         refreshRunners()
+    //     }, 1000);
+    //     return () => clearInterval(interval);
+    // }, []);
 
     const [newName, setNewName] = useState('')
 
@@ -32,14 +32,14 @@ const CharacterPicker = (props) => {
         setNewName(e.target.value)       
     }
 
-    if(runners !== null) {
+    if(props.runners !== undefined && props.runners !== null) {
         return (
             <div className="container justify-content-center text-center" role="main">
                 <h2 className="bg-dark text-info py-3">Pick Or Add A Character</h2>
                 <div className="row">
                     <div className="col">
                         <div className="list-group">
-                            { runners.map((r) => (
+                            { props.runners.map((r) => (
                                 <button key={r.id} className="list-group-item btn bg-dark text-info my-1" onClick={() => props.chooseCharacter(r.id)}>
                                     <h4 className="list-group-item-heading">{r.name}</h4>
                                     <p className="list-group-item-text">Character is a: {r.type} and owned by: {r.owner}</p>

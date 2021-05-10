@@ -51,7 +51,7 @@ function App() {
         (result) => {
           setRunners(result)
           let mr = result.find(r=>r.owner == localID)
-          setMyRunner(mr)
+          //setMyRunner(mr)
 
           console.log("refreshed netrunner list")
           // if(refreshRunnersActive) {
@@ -117,6 +117,11 @@ function App() {
           setError(error)
         }
       )
+
+      const interval = setInterval(() => {
+        refreshRunners()
+      }, 2000);
+
     }, [])
 
   const [init, setInit] = useState([])
@@ -216,7 +221,7 @@ function App() {
 
     if(ownedCharacter === null) {
       return (
-        <CharacterPicker chooseCharacter={chooseCharacter} addNewRunnerByName={addNewRunnerByName}/>
+        <CharacterPicker runners={runners} chooseCharacter={chooseCharacter} addNewRunnerByName={addNewRunnerByName}/>
       )
 
     } else {
