@@ -211,7 +211,7 @@ function App() {
         return (<CharacterEdit myRunner={myRunner} ownedCharacter={ownedCharacter} refreshRunners={refreshRunners}  setPage={setPage}/>)  
       }
       if(page == "init") {
-        return (<Initiative runners={runners}  setPage={setPage}/>)
+        return (<Initiative runners={runners}  setPage={setPage} ownedCharacter={ownedCharacter}/>)
       }
     }
   }

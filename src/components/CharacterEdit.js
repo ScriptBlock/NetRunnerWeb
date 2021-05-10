@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-
+import CharacterAttribEdit from './CharacterAttribEdit'
 
 const CharacterEdit = (props) => {
 
@@ -88,6 +88,30 @@ const CharacterEdit = (props) => {
                     {thisRunner.type}
                 </div>
             </div>
+            <CharacterAttribEdit attrib="Interface" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
+            <CharacterAttribEdit attrib="Slots" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
+            <CharacterAttribEdit attrib="Speed" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
+            <CharacterAttribEdit attrib="Reflex" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
+            <CharacterAttribEdit attrib="Damage" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
+
+
+
+            <div className="row">
+                <div className="col">
+                    <hr/>
+                    <button onClick={() => (props.setPage("home"))} className="btn btn-primary" style={{width:"100%"}}>Home</button>
+                </div>
+            </div>
+
+        </div>
+    )
+}
+
+export default CharacterEdit
+
+
+/*
+
             <div className="row">
                 <div className="col text-center bg-secondary border"><h3>Interface</h3><hr/></div>
             </div>
@@ -103,7 +127,6 @@ const CharacterEdit = (props) => {
                     <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (increaseAttribute("interface"))}>More</button>
                 </div>
             </div>
-
 
             <div className="row text-center d-flex justify-content-center py-2 bg-dark text-info">
                 <div className="col-sm-3">
@@ -143,23 +166,6 @@ const CharacterEdit = (props) => {
                     <button style={{width:"100%", height:"50px"}} className="btn btn-primary" onClick={() => (increaseAttribute("damage"))}>More</button>
                 </div>
             </div>
-
-
-            <div className="row">
-                <div className="col">
-                    <hr/>
-                    <button onClick={() => (props.setPage("home"))} className="btn btn-primary" style={{width:"100%"}}>Home</button>
-                </div>
-            </div>
-
-        </div>
-    )
-}
-
-export default CharacterEdit
-
-
-/*
 
 
 

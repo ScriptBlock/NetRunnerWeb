@@ -7,32 +7,38 @@ const Home = (props) => {
             <h1>Player Actions for {me.name}</h1>
 
             <div className="row border text-center mt-5 text-light bg-dark">
-                <div className="col-sm-3">
+                <div className="col">
                     <p>Interface</p>
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                     <p>Slots</p>
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
+                    <p>Reflex</p>
+                </div>
+                <div className="col">
                     <p>Speed</p>
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                     <p>Damage</p>
                 </div>
             </div>
 
 
             <div className="row border text-center bg-info mb-5">
-                <div className="col-sm-3">
+                <div className="col">
                     <p>{me.interface}</p>
                 </div>
-                <div className="col-sm-3">
-                    <p>{me.totalSlots}</p>
+                <div className="col">
+                    <p>{me.slots}</p>
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                     <p>{me.speed}</p>
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
+                    <p>{me.reflex}</p>
+                </div>
+                <div className="col">
                     <p>{me.damage}</p>
                 </div>
             </div>
