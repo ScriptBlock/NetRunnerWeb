@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import CharacterAttribEdit from './CharacterAttribEdit'
 
 const CharacterEdit = (props) => {
+    const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
+
 
     const [thisRunner, setThisRunner] = useState(props.myRunner)
 
@@ -16,7 +18,7 @@ const CharacterEdit = (props) => {
         console.log(newRunners)
 */
         setThisRunner({...thisRunner, type: e.target.value})
-        fetch(`http://localhost:3000/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify({type: e.target.value}) })
+        fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify({type: e.target.value}) })
         .then(response => response.json())
         .then(data => {
             console.log("updated character")
@@ -37,7 +39,7 @@ const CharacterEdit = (props) => {
 
         let param = {}
         param[attrib] = newValue
-        fetch(`http://localhost:3000/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify(param) })
+        fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify(param) })
         .then(response => response.json())
         .then(data => {
             console.log("updated character")
@@ -57,7 +59,7 @@ const CharacterEdit = (props) => {
 
         let param = {}
         param[attrib] = newValue
-        fetch(`http://localhost:3000/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify(param) })
+        fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify(param) })
         .then(response => response.json())
         .then(data => {
             console.log("updated character")

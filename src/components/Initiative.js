@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 import InitItem from './InitItem'
 
 const Initiative = (props) => {
+    const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
+
     const [myRunner, setMyRunner] = useState(null)
     const [init, setInit] = useState([])
 
@@ -16,7 +18,7 @@ const Initiative = (props) => {
 
         let thisRunner = props.runners.find(r => r.id == props.ownedCharacter)
 
-        fetch(`http://localhost:3000/initiative/${thisRunner.type}/${props.ownedCharacter}`, {...dp, body: JSON.stringify({roll: "top"}) })
+        fetch(`http://${SERVER_ADDRESS}:3000/initiative/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify({roll: "top"}) })
         .then(response => response.json())
         .then(data => {
             console.log("entered at top")
@@ -26,7 +28,7 @@ const Initiative = (props) => {
     }
 
     useEffect(() => {
-        fetch(`http://localhost:3000/initiative?sort=true`)
+        fetch(`http://${SERVER_ADDRESS}:3000/initiative?sort=true`)
         .then(response => response.json())
         .then(data => {
             console.log("fetched initiative")
@@ -35,7 +37,7 @@ const Initiative = (props) => {
         })
 
         const interval = setInterval(() => {
-            fetch(`http://localhost:3000/initiative?sort=true`)
+            fetch(`http://${SERVER_ADDRESS}:3000/initiative?sort=true`)
             .then(response => response.json())
             .then(data => {
                 console.log("fetched initiative")
@@ -62,11 +64,19 @@ const Initiative = (props) => {
             <div className="row justify-content-center text-center bg-secondary p-2 my-1">
                 <div className="col">
                     <div className="list-group">
-                    {
+                        <div className="list-group-item bg-dark text-info py-1 my-1">
+                            <div className="row">
+                                <div className="col">Name</div>
+                                <div className="col">Speed/Reflex</div>
+                                <div className="col">Type</div>
+                                <div className="col">Actions</div>
+                            </div>
+                        </div>
+                        {
                             init.map((i) => (
                                 <InitItem key={i.id} runners={props.runners} ownedCharacter={props.ownedCharacter} initItem={i}/>
                             ))
-                    }
+                        }
                     </div>
                 </div>
             </div>

@@ -17,6 +17,7 @@ import CharacterEdit from './components/CharacterEdit';
 
 function App() {
   //const [fetchRunners, setFetchRunners] = useState(false)
+  const [localID, setLocalID] = useState()
   const [refreshRunnersActive, setRefreshRunnersActive] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
   const [error, setError] = useState(null)
@@ -25,12 +26,16 @@ function App() {
   const [myRunner, setMyRunner] = useState(null)
   const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
-  let localID = localStorage.getItem('nruuid')
-  if(localID === null || localID === undefined) {
-    console.log("didn't find locally stored uuid")
-    localID = uuidv4()
-    localStorage.setItem("nruuid", localID)
-  }
+  const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
+
+  //let localID = localStorage.getItem('nruuid')
+  // setLocalID(localStorage.getItem('nruuid'))
+  // if(localID === null || localID === undefined) {
+  //   console.log("didn't find locally stored uuid")
+  //   // localID = uuidv4()
+  //   setLocalID(uuidv4())
+  //   localStorage.setItem("nruuid", localID)
+  // }
 
   const [runners, setRunners] = useState([
 //    {"id": 1, "name": "CrashOverride", "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "mapid":1, "roomid":1, "discoveredrooms":[], "owner":0}
@@ -39,7 +44,8 @@ function App() {
 
 
   let refreshRunners = () => {
-    fetch("http://localhost:3000/netrunner") 
+    // fetch("http://localhost:3000/netrunner") 
+    fetch(`http://${SERVER_ADDRESS}:3000/netrunner`) 
       .then(res => res.json())
       .then(
         (result) => {
@@ -61,28 +67,38 @@ function App() {
   //   return () => clearTimeout(timeout);
       let mr = runners.find(r=>r.owner == localID)
       setMyRunner(mr)
-}, [runners]);
+}, [runners, localID]);
 
 
   useEffect(() => {
-    fetch("http://localhost:3000/netrunner") 
+    let storedLocalID = localStorage.getItem('nruuid') 
+    if(storedLocalID == null || storedLocalID == undefined || storedLocalID == "null" || storedLocalID == "undefined") {
+      console.log("didn't find locally stored uuid")
+      // localID = uuidv4()
+      setLocalID(uuidv4())
+      localStorage.setItem("nruuid", localID)
+    } else {
+      console.log("found a locally stored nruuid")
+      setLocalID(storedLocalID)
+      console.log(storedLocalID)
+    }
+  
+
+    fetch(`http://${SERVER_ADDRESS}:3000/netrunner`) 
       .then(res => res.json())
       .then(
         (result) => {
           setIsLoaded(true)
           setRunners(result)
 
-          if(refreshRunnersActive) {
-            //refreshRunners()
-          }
 
           console.log("lets see what's in runners")
           console.log(runners)
 
           console.log("what's your uuid")
-          console.log(localID)
+          console.log(storedLocalID)
 
-          let mr = result.find(r=>r.owner == localID)
+          let mr = result.find(r=>r.owner == storedLocalID)
           setMyRunner(mr)
           if(mr !== undefined) {
             console.log("Found the character for you!")
@@ -101,7 +117,18 @@ function App() {
           setError(error)
         }
       )
-    }, [])
+    
+    const interval = setInterval(() => {
+      fetch(`http://${SERVER_ADDRESS}:3000/netrunner`) 
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setRunners(result)
+        })
+    }, 2000);
+    return () => clearInterval(interval);
+  
+  }, [])
 
   const [init, setInit] = useState([])
   /*
@@ -153,7 +180,7 @@ function App() {
   }
 
   const chooseCharacter = (id) => {
-    fetch(`http://localhost:3000/netrunner/${id}`, { ...dp, body: JSON.stringify({owner: localID})})
+    fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${id}`, { ...dp, body: JSON.stringify({owner: localID})})
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
@@ -166,7 +193,7 @@ function App() {
   }
 
   const releaseCharacter = (id) => {
-    fetch(`http://localhost:3000/netrunner/${id}`, {...dp, body: JSON.stringify({owner: 0})})
+    fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${id}`, {...dp, body: JSON.stringify({owner: 0})})
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
@@ -179,7 +206,7 @@ function App() {
   }
 
   const addNewRunnerByName = (newName) => {
-    fetch("http://localhost:3000/netrunner", { ...dp, body: JSON.stringify({name: newName, owner: localID })})
+    fetch(`http://${SERVER_ADDRESS}:3000/netrunner`, { ...dp, body: JSON.stringify({name: newName, owner: localID })})
     .then(response => response.json())
     .then(data => {
       console.log("succcess")
@@ -205,13 +232,13 @@ function App() {
 
     } else {
       if(page == "home") {
-        return (<Home releaseCharacter={releaseCharacter} ownedCharacter={ownedCharacter} runners={runners} setPage={setPage}/>)
+        return (<><h1>{localID}</h1><Home releaseCharacter={releaseCharacter} ownedCharacter={ownedCharacter} runners={runners} setPage={setPage}/></>)
       }
       if(page == "settings") {
-        return (<CharacterEdit myRunner={myRunner} ownedCharacter={ownedCharacter} refreshRunners={refreshRunners}  setPage={setPage}/>)  
+        return (<><h1>{localID}</h1><CharacterEdit myRunner={myRunner} ownedCharacter={ownedCharacter} refreshRunners={refreshRunners}  setPage={setPage}/></>)  
       }
       if(page == "init") {
-        return (<Initiative runners={runners}  setPage={setPage} ownedCharacter={ownedCharacter}/>)
+        return (<><h1>{localID}</h1><Initiative runners={runners}  setPage={setPage} ownedCharacter={ownedCharacter}/></>)
       }
     }
   }

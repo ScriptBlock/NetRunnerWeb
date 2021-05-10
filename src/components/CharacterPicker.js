@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 
 const CharacterPicker = (props) => {
+    const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
+
     //let runners = props.runners
     const [runners, setRunners] = useState(null)
 
     let refreshRunners = () => {
-        fetch("http://localhost:3000/netrunner") 
+        fetch(`http://${SERVER_ADDRESS}:3000/netrunner`) 
           .then(res => res.json())
           .then(
             (result) => {
