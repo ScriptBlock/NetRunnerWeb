@@ -48,6 +48,11 @@ const Initiative = (props) => {
 
     }
 
+    // useEffect(() => {
+    //     console.log("init data")
+    //     console.log(init)
+    // }, [init])
+
     useEffect(() => {
         fetch(`http://${SERVER_ADDRESS}:3000/initiative?sort=true`)
         .then(response => response.json())
@@ -87,16 +92,16 @@ const Initiative = (props) => {
                     <div className="list-group">
                         <div className="list-group-item bg-dark text-info py-1 my-1">
                             <div className="row">
-                                <div className="col-1">&nbsp;</div>
-                                <div className="col">Name</div>
-                                <div className="col">Speed/Reflex</div>
-                                <div className="col">Type</div>
-                                <div className="col">Order</div>
+                                <div className="p-0 col-2">&nbsp;</div>
+                                <div className="p-0 col-4 text-left">Name</div>
+                                <div className="p-0 col-1">S/R</div>
+                                <div className="p-0 col-3">Type</div>
+                                <div className="p-0 col-1">Order</div>
                             </div>
                         </div>
                         {
                             init.length > 0 ? init.map((i) => (
-                                <InitItem key={i.id} runners={props.runners} ownedCharacter={props.ownedCharacter} initItem={i}/>
+                                <InitItem key={i.id} runners={props.runners} ownedCharacter={props.ownedCharacter} initItem={i} />
                             )) : (
                                 <div className="list-group-item py-1 my-1">
                                     <div className="row">

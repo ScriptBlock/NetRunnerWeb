@@ -53,7 +53,7 @@ function App() {
           let mr = result.find(r=>r.owner == localID)
           //setMyRunner(mr)
 
-          console.log("refreshed netrunner list")
+          // console.log("refreshed netrunner list")
           // if(refreshRunnersActive) {
           //   const refresh = setTimeout(() => refreshRunners(), 2000)
           // }
@@ -62,7 +62,7 @@ function App() {
   }
 
   useEffect(() => {
-    console.log("calling useeffect because runners changed")
+    // console.log("calling useeffect because runners changed")
   //   const timeout = setTimeout(() => setFetchRunners(!fetchRunners), 2000);
   //   return () => clearTimeout(timeout);
       let mr = runners.find(r=>r.owner == localID)
@@ -73,11 +73,13 @@ function App() {
   useEffect(() => {
     let storedLocalID = localStorage.getItem('nruuid') 
     setLocalID(storedLocalID)
-    if(storedLocalID === null || storedLocalID === undefined) {
+    if(storedLocalID === null || storedLocalID === undefined || storedLocalID == "undefined") {
       console.log("didn't find locally stored uuid")
       // localID = uuidv4()
       setLocalID(uuidv4())
       localStorage.setItem("nruuid", localID)
+    } else {
+      console.log(`userid ${storedLocalID}`)
     }
   
 
@@ -92,19 +94,19 @@ function App() {
             //refreshRunners()
           }
 
-          console.log("lets see what's in runners")
-          console.log(runners)
+          // console.log("lets see what's in runners")
+          // console.log(runners)
 
-          console.log("what's your uuid")
-          console.log(storedLocalID)
+          // console.log("what's your uuid")
+          // console.log(storedLocalID)
 
           let mr = result.find(r=>r.owner == storedLocalID)
           setMyRunner(mr)
           if(mr !== undefined) {
-            console.log("Found the character for you!")
+            //console.log("Found the character for you!")
             setOwnedCharacter(mr.id)
           } else {
-            console.log("Did not find a characrer you own")
+            //console.log("Did not find a characrer you own")
             setOwnedCharacter(null)  
           }
 
@@ -157,21 +159,19 @@ function App() {
 
   }
 
-  const onRunnerNameChange = (e) => {
-    console.log(e.target.key)
-
-  }
-
+  /*
   const newInitItem = (e) => {
     let newInitID = init.length > 0 ? init.reduce((a,b)=>a.id>b.id?a:b).id + 1 : 1
     setInit([...init, {"id": newInitID, "name": "Unknown", "init": "top"}])
-    console.log("List item clicked")
-    console.log(e)
+    //console.log("List item clicked")
+    //console.log(e)
   }
+  
 
   const onClick = () => {
     console.log("Button clicked")
   }
+  */
 
   const chooseCharacter = (id) => {
     fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${id}`, { ...dp, body: JSON.stringify({owner: localID})})
@@ -226,13 +226,13 @@ function App() {
 
     } else {
       if(page == "home") {
-        return (<><h1>{localID}</h1><Home releaseCharacter={releaseCharacter} ownedCharacter={ownedCharacter} runners={runners} setPage={setPage}/></>)
+        return (<Home releaseCharacter={releaseCharacter} ownedCharacter={ownedCharacter} runners={runners} setPage={setPage}/>)
       }
       if(page == "settings") {
-        return (<><h1>{localID}</h1><CharacterEdit myRunner={myRunner} ownedCharacter={ownedCharacter} refreshRunners={refreshRunners}  setPage={setPage}/></>)  
+        return (<CharacterEdit myRunner={myRunner} ownedCharacter={ownedCharacter} refreshRunners={refreshRunners}  setPage={setPage}/>)  
       }
       if(page == "init") {
-        return (<><h1>{localID}</h1><Initiative runners={runners}  setPage={setPage} ownedCharacter={ownedCharacter}/></>)
+        return (<Initiative runners={runners}  setPage={setPage} ownedCharacter={ownedCharacter}/>)
       }
     }
   }
