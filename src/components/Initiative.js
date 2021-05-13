@@ -35,17 +35,28 @@ const Initiative = (props) => {
 
     const enterInitAtTop = () => {
         console.log(`entering player ${props.ownedCharacter} into top of initiative`)
-
-        //app.post("/initiative/:initType/:id", (req, res, next) => {
-
-
         fetch(`http://${SERVER_ADDRESS}:3000/initiative/netrunner/${props.ownedCharacter}`, {...dp, body: JSON.stringify({roll: "top"}) })
         .then(response => response.json())
         .then(data => {
             console.log("entered at top")
         })
+    }
 
+    const clearInitiative = () => {
+        console.log("removing all initiatives")
+        fetch(`http://${SERVER_ADDRESS}:3000/initiative`, {method: "DELETE", headers: {"Content-Type": "application/json"} })
+        .then(response => response.json())
+        .then(data => {
+            console.log("removed init items")
+        })
+    }
 
+    const nextInitiative = () => {
+        fetch(`http://${SERVER_ADDRESS}:3000/initiative/next`, {...dp })
+        .then(response => response.json())
+        .then(data => {
+            console.log("moved next initiative")
+        })
     }
 
     // useEffect(() => {
@@ -85,6 +96,14 @@ const Initiative = (props) => {
                 </div>
                 <div className="col">
                     <button className="btn btn-info btn-block mt-2" onClick={() => rollInit()}>Roll Init</button>
+                </div>
+            </div>
+            <div className="row justify-content-center text-center bg-secondary p-2 my-1">
+                <div className="col">
+                    <button className="btn btn-primary" onClick={() => clearInitiative()}>Clear Initiative</button>
+                </div>
+                <div className="col">
+                    <button className="btn btn-success" onClick={() => nextInitiative()}>Next Initiative</button>
                 </div>
             </div>
             <div className="row justify-content-center text-center bg-secondary p-2 my-1">
