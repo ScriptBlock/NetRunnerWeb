@@ -1,0 +1,45 @@
+[
+    { "id": "moveModal", 
+      "title": "Move Action", 
+      "features": [{"title": "Move", 
+                    "description": "Every turn, a character gets a Move Action which can only be used to move a number of m/yds equal to their MOVEx2, or a number of squares equal to their MOVE, which can include moving diagonally."
+                   },
+                   {"title":"Prone",
+                    "description":"When you are prone, you can't use your move action until you use the Get Up action."
+                   },
+                   {"title":"Other",
+                    "description":"Swimming, climbing, and jumping with a running start all cost 2 m/yds of movement for every m/yd traveled or 2 squares for every 1 square.  When jumping from standing you can clear half the distance that you could wuth a running start."
+                   }
+                  ]
+    },
+    {
+        "id": "attackModal",
+        "title": "Attack Action",
+        "features": [
+            {
+            "title":"Aimed Shot",
+            "description":">At a maximum of 1 ROF you can aim a single Ranged or Melee Attack by taking your entire action and a -8 to your check to aim for any of these special areas.  If you hit, you deal tha attack's damage as normal, and you also get an additional effect based on the special area you aimed for.  See page 170."
+            },
+            {
+            "title":"Ranged Combat",
+            "description":"See Page 170.  (Attacker's REF + Weapon Skill + 1d10) vs (Defender DV Table OR Defender DEX + Evasion + 1d10)"
+            },
+            {
+                "title": "Autofire",
+                "description": "When you use autofire it costs an action and 10 bullets. If you don't have 10 bullets remaining in your clip, you can't use Autofire. You use the Autofire skill instead of the weapon's typical Weapon Skill.  Additionally, instead of the weapon's entry on the Range Table, you use it's entry on the Autofire Range Table. If you hit, roll 2d6 damage and multiply it by the amount you beat the DV to hit your target up to a maximum of 3 for SMG and 4 for assault rifles.  This is the amount of damage the autofire dealt.  If maximum damage is rolled, you've also inflicted a critical injury. See page 173."
+            }
+        ]
+    },
+    {
+        "id": "grabModal",
+        "title": "Grab",
+        "features": [{
+            "title":"Description",
+            "description":"As an Action you can grab and hold someone, take an object they are carrying, or escape a grapple.  You need a free hand to initiate a grab, which cannot be used to do anything else for the duration of any Grapple that results from a grab."
+        },
+        {"title":"Skill", "description":"To determine the outcome of a grab, both you and your target within your reach roll DEX+Brawling+1d10.  If you win, you can choose to either grab hold of the defender instead of their stuff, both of you are now considered to be in a grapple and take a -2 to all actions for as long as you both remain in a grapple"},
+        {"title":"Reference", "description":"See page 176."}]
+    }
+    
+
+]

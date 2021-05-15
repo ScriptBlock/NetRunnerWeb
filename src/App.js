@@ -11,6 +11,7 @@ import ProgramItem from './components/ProgramItem'
 import Home from './components/Home'
 import CharacterPicker from './components/CharacterPicker'
 import Netrunners from './components/Netrunners'
+import Map from './components/Map'
 import Initiative from './components/Initiative'
 import CharacterEdit from './components/CharacterEdit';
 
@@ -233,6 +234,9 @@ function App() {
       }
       if(page == "init") {
         return (<Initiative runners={runners}  setPage={setPage} ownedCharacter={ownedCharacter}/>)
+      }
+      if(page == "netrunner") {
+        return (<Map />)
       }
     }
   }

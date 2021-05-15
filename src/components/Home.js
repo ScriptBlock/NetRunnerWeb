@@ -1,14 +1,16 @@
-import {useRef} from 'react'
+import {useRef, useEffect, useState} from 'react'
+import data from '../Actions.json'
+import ExplainModal from './ExplainModal'
 
 const Home = (props) => {
     const myModal = useRef()
+    const [actionState, setActionState] = useState("meat")
+
     let me = props.runners.find(r=>r.id===props.ownedCharacter)
 
-    //console.log("in home render... ")
-    //console.log(props.ownedCharacter)
 
     return (
-        <div className="container" role="main">
+        <div className="container flex-column" role="main">
             <h1>Player Actions for {me.name}</h1>
 
             <div className="row text-center">
@@ -64,73 +66,15 @@ const Home = (props) => {
 
             <div className="row bg-secondary py-3">
                 <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Netrun</button>
+                    <button className="btn btn-info btn-block px-5" onClick={() => props.setPage("netrunner")}>Netrun</button>
                 </div>
             </div>
-            <div className="row bg-secondary py-3" style={{height:"100px"}}>
-                <div className="col text-center">
-                    <button type="button" className="btn btn-info btn-block px-5 h-100" data-toggle="modal" data-target="#moveModal">Move</button>
-                </div>
-                <div className="col text-center">
-                    <button type="button" className="btn btn-info btn-block px-5 h-100" data-toggle="modal" data-target="#attackModal">Attack</button>
-                </div>
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5 h-100">Choke</button>
-                </div>
-            </div>
-            <div className="row bg-secondary py-3">
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Shield</button>
-                </div>
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Get In</button>
-                </div>
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Get Up</button>
-                </div>
-            </div>
-            <div className="row bg-secondary py-3">
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Grab</button>
-                </div>
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Hold</button>
-                </div>
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Human Shield</button>
-                </div>
-            </div>
-            <div className="row bg-secondary py-3">
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Reload</button>
-                </div>
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Run</button>
-                </div>
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Start It</button>
-                </div>
-            </div>
-            <div className="row bg-secondary py-3">
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Stabilize</button>
-                </div>
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Throw</button>
-                </div>
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Use Object</button>
-                </div>
-            </div>
-            <div className="row bg-secondary py-3">
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Use Skill</button>
-                </div>
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5">Maneuver</button>
-                </div>
-                <div className="col text-center">
-                    &nbsp;
+            <div className="row bg-secondary py-3 flex-fill">
+                <div className="col text-center flex-column">
+
+                    { data.map(d => (
+                        <button key={d.id} type="button" className="btn btn-info px-4 py-3 m-2" data-toggle="modal" data-target={"#"+d.id}>{d.title}</button>
+                    ))}
                 </div>
             </div>
 
@@ -150,6 +94,18 @@ const Home = (props) => {
                 </div>
             </div>   
 
+            { data.map(d => (
+                    <ExplainModal key={d.id} data={d} />
+                )
+            )}
+        </div>
+
+
+    )
+}
+
+export default Home
+/*
 
             <div className="modal fade" id="moveModal" tabIndex="-1" role="dialog"  aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered" role="document">
@@ -192,10 +148,7 @@ const Home = (props) => {
                     </div>
                 </div>
             </div>
-        </div>
 
 
-    )
-}
 
-export default Home
+*/
