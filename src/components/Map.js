@@ -1,11 +1,51 @@
+import { useState, useEffect } from 'react'
+import MapLayer from './MapLayer'
+
+
 
 const Map = () => {
+    const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
+
+    const [roomData, setRoomData] = useState([])
+    
+    useEffect(() => {
+        fetch(`http://${SERVER_ADDRESS}:3000/room/1`)
+        .then(response => response.json())
+        .then(data => {
+            // console.log("fetched initiative")
+            // console.log(data)
+            setRoomData(data)
+        })
+    }, [])
+
     return (
         <div className="container-flex bg-dark">
             <div className="row">
                 <div className="col">
                     <ul className="tree d-flex justify-content-center text-light">
-                        <li className=""> 
+                        { 
+                            roomData.length > 0 && (
+                                <MapLayer rooms={roomData} room={roomData.find(r=>r.id == 1)} />
+                            )
+                        }
+                    </ul>
+                </div>
+            </div>            
+        </div>
+    )
+}
+
+export default Map
+
+
+/*
+
+
+        <div className="container-flex bg-dark">
+            <div className="row">
+                <div className="col">
+                    <ul className="tree d-flex justify-content-center text-light">
+                        <li> 
                             <span className="bg-secondary p-3">Entrypoint</span>
                             <ul>
                                 <li> 
@@ -55,7 +95,6 @@ const Map = () => {
                 </div>
             </div>            
         </div>
-    )
-}
 
-export default Map
+
+*/
