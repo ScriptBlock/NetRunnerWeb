@@ -5,103 +5,113 @@ import ExplainModal from './ExplainModal'
 const Home = (props) => {
     const myModal = useRef()
     const [actionState, setActionState] = useState("meat")
+    const [me, setMe] = useState(null)
 
-    let me = props.runners.find(r=>r.id===props.ownedCharacter)
+    useEffect(() => {
+        setMe(props.runners.find(r=>r.id===props.ownedCharacter))
+    },[props.ownedCharacter])
 
+    useEffect(() => {
+        setMe(props.runners.find(r=>r.id===props.ownedCharacter))
+    },[])
 
-    return (
-        <div className="container flex-column" role="main">
-            <h1>Player Actions for {me.name}</h1>
+    if(me != null) {
+        return (
+            <div className="container flex-column" role="main">
+                <h1>Player Actions for {me.name}</h1>
 
-            <div className="row text-center">
-                <div className="col text-center justify-content-center p-0 m-0">
-                    <button className="btn btn-secondary btn-block bg-dark text-info my-1" onClick={() => props.setPage("init")}>
-                        <h4 className="">Initiative</h4>
-                    </button>
+                <div className="row text-center">
+                    <div className="col text-center justify-content-center p-0 m-0">
+                        <button className="btn btn-secondary btn-block bg-dark text-info my-1" onClick={() => props.setPage("init")}>
+                            <h4 className="">Initiative</h4>
+                        </button>
+                    </div>
                 </div>
+
+                <div className="row border text-center text-light bg-dark">
+                    <div className="col">
+                        <p>Interface</p>
+                    </div>
+                    <div className="col">
+                        <p>Slots</p>
+                    </div>
+                    <div className="col">
+                        <p>Reflex</p>
+                    </div>
+                    <div className="col">
+                        <p>Speed</p>
+                    </div>
+                    <div className="col">
+                        <p>Damage</p>
+                    </div>
+                </div>
+
+
+                <div className="row border text-center bg-info mb-2">
+                    <div className="col">
+                        <p>{me.interface}</p>
+                    </div>
+                    <div className="col">
+                        <p>{me.slots}</p>
+                    </div>
+                    <div className="col">
+                        <p>{me.speed}</p>
+                    </div>
+                    <div className="col">
+                        <p>{me.reflex}</p>
+                    </div>
+                    <div className="col">
+                        <p>{me.damage}</p>
+                    </div>
+                </div>
+
+                <div className="row mt-4 bg-dark text-info">
+                    <div className="col p-0 text-center">
+                        <h3>Actions</h3>
+                    </div>    
+                </div>  
+
+                { me.type == "Netrunner" ? (
+                <div className="row bg-secondary py-3">
+                    <div className="col text-center">
+                        <button className="btn btn-info btn-block px-5" onClick={() => props.setPage("netrunner")}>Netrun</button>
+                    </div>
+                </div>
+                ) : "" }
+
+                <div className="row bg-secondary py-3 flex-fill">
+                    <div className="col text-center flex-column">
+
+                        { data.map(d => (
+                            <button key={d.id} type="button" className="btn btn-info px-4 py-3 m-2" data-toggle="modal" data-target={"#"+d.id}>{d.title}</button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="col justify-content-center text-center">
+                        <button className="btn bg-dark text-info my-1" style={{height:"100%"}} onClick={() => props.setPage("settings")}>
+                            <h4 className="">Change My Settings</h4>
+                            <p className="">Change your character options</p>
+                        </button>
+                    </div>
+                    <div className="col justify-content-center text-center">
+                        <button className="btn bg-dark text-info my-1" style={{height:"100%"}} onClick={() => props.releaseCharacter(props.ownedCharacter)}>
+                            <h4 className="">Release ownership of this character</h4>
+                            <p className="">Go back to the character selection screen</p>
+                        </button>
+                    </div>
+                </div>   
+
+                { data.map(d => (
+                        <ExplainModal key={d.id} data={d} />
+                    )
+                )}
             </div>
-
-            <div className="row border text-center text-light bg-dark">
-                <div className="col">
-                    <p>Interface</p>
-                </div>
-                <div className="col">
-                    <p>Slots</p>
-                </div>
-                <div className="col">
-                    <p>Reflex</p>
-                </div>
-                <div className="col">
-                    <p>Speed</p>
-                </div>
-                <div className="col">
-                    <p>Damage</p>
-                </div>
-            </div>
-
-
-            <div className="row border text-center bg-info mb-2">
-                <div className="col">
-                    <p>{me.interface}</p>
-                </div>
-                <div className="col">
-                    <p>{me.slots}</p>
-                </div>
-                <div className="col">
-                    <p>{me.speed}</p>
-                </div>
-                <div className="col">
-                    <p>{me.reflex}</p>
-                </div>
-                <div className="col">
-                    <p>{me.damage}</p>
-                </div>
-            </div>
-
-            <div className="row mt-4 bg-dark text-info">
-                <div className="col p-0 text-center">
-                    <h3>Actions</h3>
-                </div>    
-            </div>  
-
-            <div className="row bg-secondary py-3">
-                <div className="col text-center">
-                    <button className="btn btn-info btn-block px-5" onClick={() => props.setPage("netrunner")}>Netrun</button>
-                </div>
-            </div>
-            <div className="row bg-secondary py-3 flex-fill">
-                <div className="col text-center flex-column">
-
-                    { data.map(d => (
-                        <button key={d.id} type="button" className="btn btn-info px-4 py-3 m-2" data-toggle="modal" data-target={"#"+d.id}>{d.title}</button>
-                    ))}
-                </div>
-            </div>
-
-
-            <div className="row">
-                <div className="col justify-content-center text-center">
-                    <button className="btn bg-dark text-info my-1" style={{height:"100%"}} onClick={() => props.setPage("settings")}>
-                        <h4 className="">Change My Settings</h4>
-                        <p className="">Change your character options</p>
-                    </button>
-                </div>
-                <div className="col justify-content-center text-center">
-                    <button className="btn bg-dark text-info my-1" style={{height:"100%"}} onClick={() => props.releaseCharacter(props.ownedCharacter)}>
-                        <h4 className="">Release ownership of this character</h4>
-                        <p className="">Go back to the character selection screen</p>
-                    </button>
-                </div>
-            </div>   
-
-            { data.map(d => (
-                    <ExplainModal key={d.id} data={d} />
-                )
-            )}
-        </div>
-
-
-    )
+        )
+    } else {
+        return (<h1>Loading</h1>)
+    }   
 }
 
 export default Home

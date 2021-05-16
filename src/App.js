@@ -14,6 +14,7 @@ import Netrunners from './components/Netrunners'
 import Map from './components/Map'
 import Initiative from './components/Initiative'
 import CharacterEdit from './components/CharacterEdit';
+import NetArchListing from './components/NetArchListing';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
   const [ownedCharacter, setOwnedCharacter] = useState(null)
   const [page, setPage] = useState("home")
   const [myRunner, setMyRunner] = useState(null)
+  const [activeJackIn, setActiveJackIn] = useState(0)
   const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
   const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
@@ -214,6 +216,14 @@ function App() {
     
   }
 
+  const jackIn = (id) => {
+    setActiveJackIn(id)
+  }
+
+  const jackOut = () => {
+    setActiveJackIn(0)
+  }
+
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
@@ -236,7 +246,11 @@ function App() {
         return (<Initiative runners={runners}  setPage={setPage} ownedCharacter={ownedCharacter}/>)
       }
       if(page == "netrunner") {
-        return (<Map />)
+        if(activeJackIn > 0) {
+          return (<Map jackOut={jackOut} setPage={setPage}/>)
+        } else {      
+          return (<NetArchListing playerID={ownedCharacter} jackIn={jackIn}/>)
+        }
       }
     }
   }

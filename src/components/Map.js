@@ -3,12 +3,12 @@ import MapLayer from './MapLayer'
 
 
 
-const Map = () => {
+const Map = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
 
     const [roomData, setRoomData] = useState([])
-    
-    useEffect(() => {
+
+    const refreshRoomData = () => {
         fetch(`http://${SERVER_ADDRESS}:3000/room/1`)
         .then(response => response.json())
         .then(data => {
@@ -16,16 +16,32 @@ const Map = () => {
             // console.log(data)
             setRoomData(data)
         })
+
+    }
+
+    useEffect(() => {
+        refreshRoomData()
     }, [])
 
     return (
         <div className="container-flex bg-dark">
             <div className="row">
                 <div className="col">
+                    <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { refreshRoomData() }}>Refresh</button>
+                </div>
+                <div className="col">
+                    <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { props.jackOut() }}>Jack Out</button>
+                </div>
+                <div className="col">
+                    <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { props.setPage("home") }}>Home</button>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col">
                     <ul className="tree d-flex justify-content-center text-light">
                         { 
                             roomData.length > 0 && (
-                                <MapLayer rooms={roomData} room={roomData.find(r=>r.id == 1)} />
+                                <MapLayer key="1" rooms={roomData} room={roomData.find(r=>r.id == 1)} />
                             )
                         }
                     </ul>
