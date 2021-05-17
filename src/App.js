@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 
 import { Router, Link } from "@reach/router"
@@ -79,7 +79,10 @@ function App() {
     if(storedLocalID === null || storedLocalID === undefined || storedLocalID == "undefined") {
       console.log("didn't find locally stored uuid")
       // localID = uuidv4()
-      setLocalID(uuidv4())
+      storedLocalID = uuidv4()
+      setLocalID(storedLocalID)
+      console.log(`Setting nruuid = ${storedLocalID}`)
+      
       localStorage.setItem("nruuid", localID)
     } else {
       console.log(`userid ${storedLocalID}`)
@@ -247,7 +250,7 @@ function App() {
       }
       if(page == "netrunner") {
         if(activeJackIn > 0) {
-          return (<Map jackOut={jackOut} setPage={setPage}/>)
+          return (<Map playerID={ownedCharacter} runners={runners} activeMap={activeJackIn} jackOut={jackOut} setPage={setPage}/>)
         } else {      
           return (<NetArchListing playerID={ownedCharacter} jackIn={jackIn}/>)
         }

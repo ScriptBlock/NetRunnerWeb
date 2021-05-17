@@ -7,27 +7,33 @@ const Map = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
 
     const [roomData, setRoomData] = useState([])
+    const [mapContents, setMapContents] = useState([])
 
-    const refreshRoomData = () => {
-        fetch(`http://${SERVER_ADDRESS}:3000/room/1`)
+    const refreshRoomData = (mapID) => {
+        fetch(`http://${SERVER_ADDRESS}:3000/room/${mapID}`)
         .then(response => response.json())
         .then(data => {
-            // console.log("fetched initiative")
-            // console.log(data)
             setRoomData(data)
         })
+
+        fetch(`http://${SERVER_ADDRESS}:3000/mapcontents/${mapID}`)
+        .then(response => response.json())
+        .then(data => {
+            setMapContents(data)
+        })
+
 
     }
 
     useEffect(() => {
-        refreshRoomData()
+        refreshRoomData(props.activeMap)
     }, [])
 
     return (
         <div className="container-flex bg-dark">
             <div className="row">
                 <div className="col">
-                    <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { refreshRoomData() }}>Refresh</button>
+                    <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { refreshRoomData(props.activeMap) }}>Refresh</button>
                 </div>
                 <div className="col">
                     <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { props.jackOut() }}>Jack Out</button>
@@ -41,7 +47,7 @@ const Map = (props) => {
                     <ul className="tree d-flex justify-content-center text-light">
                         { 
                             roomData.length > 0 && (
-                                <MapLayer key="1" rooms={roomData} room={roomData.find(r=>r.id == 1)} />
+                                <MapLayer key="1" playerID={props.playerID} runners={props.runners} rooms={roomData} room={roomData.find(r=>r.sourceroom == undefined)} mapContents={mapContents} roomContents={mapContents.find(c => c.roomid == roomData.find(r=>r.sourceroom==undefined).id)}/>
                             )
                         }
                     </ul>
