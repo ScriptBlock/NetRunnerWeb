@@ -201,6 +201,7 @@ function App() {
       console.log(`clearing ownership for ${id}`)
       setRefreshRunnersActive(false)
       setOwnedCharacter(null)
+      jackOut()
       setRunners(data)
     })
   }
@@ -250,7 +251,7 @@ function App() {
       }
       if(page == "netrunner") {
         if(activeJackIn > 0) {
-          return (<Map playerID={ownedCharacter} runners={runners} activeMap={activeJackIn} jackOut={jackOut} setPage={setPage}/>)
+          return (<Map ownedCharacter={ownedCharacter} runners={runners} activeMap={activeJackIn} jackOut={jackOut} setPage={setPage}/>)
         } else {      
           return (<NetArchListing playerID={ownedCharacter} jackIn={jackIn}/>)
         }

@@ -1,26 +1,30 @@
 import { useState, useEffect } from 'react'
 import MapLayer from './MapLayer'
-
+import MapRoomModal from './MapRoomModal'
 
 
 const Map = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
 
     const [roomData, setRoomData] = useState([])
-    const [mapContents, setMapContents] = useState([])
+    // const [mapContents, setMapContents] = useState([])
 
     const refreshRoomData = (mapID) => {
-        fetch(`http://${SERVER_ADDRESS}:3000/room/${mapID}`)
+        // localhost:3000/room/1?gathercontext=true&ownedCharacter=1        
+
+        fetch(`http://${SERVER_ADDRESS}:3000/room/${mapID}?gathercontext=true&ownedcharacter=${props.ownedCharacter}`)
         .then(response => response.json())
         .then(data => {
             setRoomData(data)
+            console.log("fetched room data")
+            console.log(data)
         })
 
-        fetch(`http://${SERVER_ADDRESS}:3000/mapcontents/${mapID}`)
-        .then(response => response.json())
-        .then(data => {
-            setMapContents(data)
-        })
+        // fetch(`http://${SERVER_ADDRESS}:3000/mapcontents/${mapID}`)
+        // .then(response => response.json())
+        // .then(data => {
+        //     setMapContents(data)
+        // })
 
 
     }
@@ -47,15 +51,23 @@ const Map = (props) => {
                     <ul className="tree d-flex justify-content-center text-light">
                         { 
                             roomData.length > 0 && (
-                                <MapLayer key="1" playerID={props.playerID} runners={props.runners} rooms={roomData} room={roomData.find(r=>r.sourceroom == undefined)} mapContents={mapContents} roomContents={mapContents.find(c => c.roomid == roomData.find(r=>r.sourceroom==undefined).id)}/>
+                                <MapLayer key="0" ownedCharacter={props.ownedCharacter} runners={props.runners} rooms={roomData} room={roomData.find(r=>r.sourceroom == undefined)}/>
                             )
                         }
                     </ul>
                 </div>
             </div>            
+
+            {
+                roomData.map(r => (
+                    <MapRoomModal key={r.id} room={r} />
+                ))
+            }
         </div>
     )
 }
+
+//TODO build modal helpers here.  don't need to respect visibility.  these modals will only be called from visible node clicks
 
 export default Map
 
