@@ -26,7 +26,11 @@ const Map = (props) => {
         //     setMapContents(data)
         // })
 
+    }
 
+    const doModalAction = (rolledDC, modalAction) => {
+        alert(`modal action clicked ${modalAction} with a rollDC of ${rolledDC}`)
+    
     }
 
     useEffect(() => {
@@ -60,7 +64,7 @@ const Map = (props) => {
 
             {
                 roomData.map(r => (
-                    <MapRoomModal key={r.id} room={r} />
+                    <MapRoomModal key={r.id} room={r} doModalAction={doModalAction}/>
                 ))
             }
         </div>
