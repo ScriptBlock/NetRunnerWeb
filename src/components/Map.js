@@ -55,7 +55,7 @@ const Map = (props) => {
                     <ul className="tree d-flex justify-content-center text-light">
                         { 
                             roomData.length > 0 && (
-                                <MapLayer key="0" ownedCharacter={props.ownedCharacter} runners={props.runners} rooms={roomData} room={roomData.find(r=>r.sourceroom == undefined)}/>
+                                <MapLayer key="0" ownedCharacter={props.ownedCharacter} doModalAction={doModalAction} runners={props.runners} rooms={roomData} room={roomData.find(r=>r.sourceroom == undefined)}/>
                             )
                         }
                     </ul>
@@ -63,9 +63,9 @@ const Map = (props) => {
             </div>            
 
             {
-                roomData.map(r => (
-                    <MapRoomModal key={r.id} room={r} doModalAction={doModalAction}/>
-                ))
+                // roomData.map(r => (
+                //     <MapRoomModal key={r.id} room={r} doModalAction={doModalAction}/>
+                // ))
             }
         </div>
     )
