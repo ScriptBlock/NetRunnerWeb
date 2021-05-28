@@ -5,6 +5,8 @@ import MapRoomModal from './MapRoomModal'
 
 const Map = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
+    const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
+
 
     const [roomData, setRoomData] = useState([])
     // const [mapContents, setMapContents] = useState([])
@@ -28,9 +30,24 @@ const Map = (props) => {
 
     }
 
-    const doModalAction = (rolledDC, modalAction) => {
-        alert(`modal action clicked ${modalAction} with a rollDC of ${rolledDC}`)
-    
+    const doModalAction = (details) => {
+        // alert(`modal action clicked ${modalAction} with a rollDC of ${rolledDC}`)
+        console.log(details)
+        switch(details.modalAction) {
+            case "pathfind": 
+                fetch(`http://${SERVER_ADDRESS}:3000/pathfind/${props.ownedCharacter}/${props.activeMap}`, {...dp, body: JSON.stringify({"dv": details.dv, "startingroom": details.startingroom, "maxdepth": details.dv}) })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("did pathfinder action")
+                    refreshRoomData(props.activeMap)
+                })    
+                break
+            default:
+                console.log("passed invalid modalAction")
+
+        }
+
+
     }
 
     useEffect(() => {

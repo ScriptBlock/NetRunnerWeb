@@ -35,7 +35,7 @@ const MapLayer = (props) => {
             { nextRooms.length > 0 && (<ul>
                 { nextRooms.length > 0 && nextRooms.map(n=> (
                     // <MapLayer key="1" rooms={roomData} room={roomData.find(r=>r.sourceroom == undefined)} mapContents={mapContents} roomContents={mapContents.find(c => c.roomid == roomData.find(r=>r.sourceroom==undefined).id)}/>
-                    <MapLayer key={n.id} ownedCharacter={props.ownedCharacter} runners={props.runners} rooms={props.rooms} room={n}/>  
+                    <MapLayer key={n.id} doModalAction={props.doModalAction} ownedCharacter={props.ownedCharacter} runners={props.runners} rooms={props.rooms} room={n}/>  
                 ))}
             </ul>)}
             <MapRoomModal key={props.room.id} room={props.room} showModal={showModal} setModalVisibility={setModalVisibility} doModalAction={props.doModalAction}/>

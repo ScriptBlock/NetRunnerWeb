@@ -251,7 +251,7 @@ function App() {
       }
       if(page == "netrunner") {
         if(activeJackIn > 0) {
-          return (<Map ownedCharacter={ownedCharacter} runners={runners} activeMap={activeJackIn} jackOut={jackOut} setPage={setPage}/>)
+          return (<Map ownedCharacter={ownedCharacter} runners={runners} activeMap={activeJackIn} refreshRunners={refreshRunners} jackOut={jackOut} setPage={setPage}/>)
         } else {      
           return (<NetArchListing playerID={ownedCharacter} jackIn={jackIn}/>)
         }
