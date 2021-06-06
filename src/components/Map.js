@@ -18,8 +18,8 @@ const Map = (props) => {
         .then(response => response.json())
         .then(data => {
             setRoomData(data)
-            console.log("fetched room data")
-            console.log(data)
+            //console.log("fetched room data")
+            //console.log(data)
         })
 
         // fetch(`http://${SERVER_ADDRESS}:3000/mapcontents/${mapID}`)
@@ -34,6 +34,24 @@ const Map = (props) => {
         // alert(`modal action clicked ${modalAction} with a rollDC of ${rolledDC}`)
         console.log(details)
         switch(details.modalAction) {
+            case "backdoor": 
+                fetch(`http://${SERVER_ADDRESS}:3000/backdoor/${details.roomid}/${props.ownedCharacter}`, {...dp, body: JSON.stringify({"dv": details.dv}) })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("backdoor action")
+                    refreshRoomData(props.activeMap)
+                })    
+                break
+            
+            case "password": 
+                fetch(`http://${SERVER_ADDRESS}:3000/enterpassword/${details.roomid}/${props.ownedCharacter}`, {...dp, body: JSON.stringify({"pwd": details.pwd}) })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("password action")
+                    refreshRoomData(props.activeMap)
+                })    
+                break
+
             case "pathfind": 
                 fetch(`http://${SERVER_ADDRESS}:3000/pathfind/${props.ownedCharacter}/${props.activeMap}`, {...dp, body: JSON.stringify({"dv": details.dv, "startingroom": details.startingroom, "maxdepth": details.dv}) })
                 .then(response => response.json())
@@ -42,6 +60,25 @@ const Map = (props) => {
                     refreshRoomData(props.activeMap)
                 })    
                 break
+            case "move":
+                fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}/move/${details.targetroom}`, {...dp })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("tried to move the netrunner to the target room")
+                    refreshRoomData(props.activeMap)
+                })    
+                break
+
+            case "movedown":
+                // fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}/move/${details.targetroom}`, {...dp })
+                // .then(response => response.json())
+                // .then(data => {
+                //     console.log("tried to move the netrunner to the target room")
+                //     refreshRoomData(props.activeMap)
+                // })    
+                console.log("sending movedown action to controller")
+                break
+
             default:
                 console.log("passed invalid modalAction")
 

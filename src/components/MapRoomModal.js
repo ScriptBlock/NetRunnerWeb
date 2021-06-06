@@ -6,6 +6,7 @@ const MapRoomModal = (props) => {
 
     const [modalPanel, setModalPanel] = useState(null)
     const enteredDC = useRef()
+    const enteredPWD = useRef()
     const [modalMode, setModalMode] = useState("buttons")
 
 /*
@@ -26,13 +27,34 @@ var abilities = [
     useEffect(() => {
         let retVal = null
         if(modalMode == "buttons") {
+            if(props.distanceFromRunner > 0) {
+                retVal = <>
+                            <button className="btn btn-primary btn-block" onClick={() => { resetModal(); props.doModalAction({"modalAction":"move", "targetroom":props.room.id})}}>Move Here</button>
+                        </>
+            } else {
+                let showMoveDown = false
+                if(props.room.hasexits != null && props.room.hasexits == true) {
+                    showMoveDown = true
+                    if(props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen == false) {
+                        showMoveDown = false
+                    }
+                    if(props.rooms.filter(r => r.sourceroom == props.room.id).length > 0)  {
+                        showMoveDown = false
+                    }
+                }
 
-            retVal = <>
+                retVal = <>
                         <ModalModeButton mode="pathfind" modeName="Pathfinder" setModalMode={setModalMode}/>
-                        {props.room.contents != null && props.room.contents.type == "password" && <ModalModeButton mode="backdoor" modeName="Backdoor" setModalMode={setModalMode}/>}
-                        
+                        {props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen != true && <ModalModeButton mode="backdoor" modeName="Backdoor" setModalMode={setModalMode}/>}
+                        {props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen != true && <ModalModeButton mode="password" modeName="Enter Password" setModalMode={setModalMode}/>}
+                        {showMoveDown && <ModalModeButton mode="movedown" modeName="Move Down" setModalMode={setModalMode}/>}
                     </>
+            }
         } else {
+            if(modalMode == "movedown") {
+                props.doModalAction({"modalAction": modalMode, "fromroom": props.room.id})
+                resetModal()
+            }
             if(modalMode == "pathfind") {
                 retVal = (
                     <>
@@ -49,12 +71,54 @@ var abilities = [
                     </>
                 )
             }
+
+            if(modalMode == "backdoor") {
+                retVal = (
+                    <>
+                        <form onSubmit={(f) => {f.preventDefault()}}>
+                            <div className="form-group">
+                                <label htmlFor="dc">Rolled DC</label>
+                                <input className="form-control input" type="text" name="dc" id="dc" onChange={(e) => enteredDC.current = e.target.value}></input>
+                            </div>
+                            <button type="button" className="btn btn-primary" onClick={(e) => {
+                                e.preventDefault()
+                                console.log(`submitting backdoor modal action ${props.room.id}`)
+                                props.doModalAction({"dv":enteredDC.current, "modalAction": modalMode, "roomid": props.room.id})
+                                resetModal()
+                            }}>Execute</button>
+                        </form>                        
+                    </>
+                )
+            }
+
+            if(modalMode == "password") {
+                retVal = (
+                    <>
+                        <form onSubmit={(f) => {f.preventDefault()}}>
+                            <div className="form-group">
+                                <label htmlFor="pwd">Enter the password</label>
+                                <input className="form-control input" type="text" name="pwd" id="pwd" onChange={(e) => enteredPWD.current = e.target.value}></input>
+                            </div>
+                            <button type="button" className="btn btn-primary" onClick={(e) => {
+                                e.preventDefault()
+                                console.log(`submitting password for room  ${props.room.id}`)
+                                props.doModalAction({"pwd":enteredPWD.current, "modalAction": modalMode, "roomid": props.room.id})
+                                resetModal()
+                            }}>Execute</button>
+                        </form>                        
+                    </>
+                )
+            }
+            //app.post("/enterpassword/:roomid/:netrunnerid", (req, res, next) => {
+
+
         }
+
         setModalPanel(retVal)
         // return () => {
         //     cleanup
         // }
-    }, [props.room, modalMode])
+    }, [props.room, modalMode, props.distanceFromRunner])
 
     const resetModal = () => {
         setModalMode("buttons")

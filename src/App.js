@@ -48,6 +48,7 @@ function App() {
 
   let refreshRunners = () => {
     // fetch("http://localhost:3000/netrunner") 
+    //console.log("refreshrunners in app.js called")
     fetch(`http://${SERVER_ADDRESS}:3000/netrunner`) 
       .then(res => res.json())
       .then(
