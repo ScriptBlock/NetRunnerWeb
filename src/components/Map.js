@@ -70,13 +70,15 @@ const Map = (props) => {
                 break
 
             case "movedown":
-                // fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}/move/${details.targetroom}`, {...dp })
-                // .then(response => response.json())
-                // .then(data => {
-                //     console.log("tried to move the netrunner to the target room")
-                //     refreshRoomData(props.activeMap)
-                // })    
-                console.log("sending movedown action to controller")
+                console.log("moving down into some possible next room")
+                //app.post("/netrunner/:netrunnerid/movedown", (req, res, next) => {
+
+                fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}/movedown`, {...dp })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("tried to move the netrunner to the target room")
+                    refreshRoomData(props.activeMap)
+                })    
                 break
 
             default:

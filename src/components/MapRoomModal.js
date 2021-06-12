@@ -58,7 +58,7 @@ var abilities = [
             if(modalMode == "pathfind") {
                 retVal = (
                     <>
-                        <form>
+                        <form onSubmit={(f) => {f.preventDefault()}}>
                             <div className="form-group">
                                 <label htmlFor="dc">Rolled DC</label>
                                 <input className="form-control input" type="text" name="dc" id="dc" onChange={(e) => enteredDC.current = e.target.value}></input>
