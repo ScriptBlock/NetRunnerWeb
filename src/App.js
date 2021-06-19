@@ -32,6 +32,8 @@ function App() {
   const [page, setPage] = useState("home")
   const [myRunner, setMyRunner] = useState(null)
   const [activeJackIn, setActiveJackIn] = useState(0)
+  const [runners, setRunners] = useState([])
+
   const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
   const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
@@ -45,9 +47,6 @@ function App() {
   //   localStorage.setItem("nruuid", localID)
   // }
 
-  const [runners, setRunners] = useState([
-//    {"id": 1, "name": "CrashOverride", "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "mapid":1, "roomid":1, "discoveredrooms":[], "owner":0}
-  ])
 
 
 

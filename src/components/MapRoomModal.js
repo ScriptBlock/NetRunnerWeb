@@ -54,6 +54,7 @@ var abilities = [
                         {props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen != true && <ModalModeButton mode="password" modeName="Enter Password" setModalMode={setModalMode}/>}
                         {props.room.contents != null && props.room.contents.type == "file" && !props.runner.ids.includes(props.room.contents.id) && <ModalModeButton mode="eyedee" modeName="Eye Dee File" setModalMode={setModalMode}/>}
                         {props.room.contents != null && props.room.contents.type == "controlpoint" && !props.runner.controlpoints.includes(props.room.contents.id) && <ModalModeButton mode="control" modeName="Control" setModalMode={setModalMode}/>}
+                        {/* TODO if tracked, add the slide capability */}
                         {showMoveDown && <ModalModeButton mode="movedown" modeName="Move Down" setModalMode={setModalMode}/>}
                     </>
             }

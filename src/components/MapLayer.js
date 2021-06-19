@@ -1,6 +1,8 @@
 /* eslint eqeqeq: 0 */
 /* eslint no-unused-vars: 0 */
 /* eslint react-hooks/exhaustive-deps: 0 */
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 
 import { useRef, useState, useEffect } from 'react'
@@ -113,7 +115,15 @@ const MapLayer = (props) => {
         if(props.room.ices != undefined && props.room.ices.length > 0) {
             // console.log("this room has ice(s)")
             // console.log(props.room.ices)
-            props.room.ices.map(i => (finalRoomContent.current = <>{finalRoomContent.current}<p className="bg-danger text-light">{i.name}</p></>))
+            props.room.ices.forEach(i => {
+                let decoration = ""
+                if(i.tracking == currentRunner.id) {
+                    console.log("setting decoration to star")
+                    decoration = <FontAwesomeIcon icon={faStar} />
+                }
+                finalRoomContent.current = <>{finalRoomContent.current}<div className="bg-danger text-light">{i.name}{decoration}</div></>
+            })
+            
             //props.room.ices.map(i => (console.log(i.name)))
         }
 
@@ -140,10 +150,10 @@ const MapLayer = (props) => {
                     <strong>{props.room.name}</strong>
                 </p>
                 <hr className="m-0 p-0 bg-light"></hr>
-                <p className="p-0 m-0">
+                <div className="p-0 m-0">
                     {finalRoomContent.current}
                     {/* {props.room.contents != undefined ? props.room.contents.type : "Empty"} */}
-                </p>
+                </div>
             </span>
             { nextRooms.length > 0 && (<ul>
                 { nextRooms.length > 0 && nextRooms.map(n=> (
