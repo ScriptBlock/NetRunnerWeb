@@ -12,6 +12,7 @@ const Initiative = (props) => {
 
     // const [myRunner, setMyRunner] = useState(null)
     const [init, setInit] = useState([])
+    const [ices, setIces] = useState([])
 
     const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
@@ -68,7 +69,7 @@ const Initiative = (props) => {
     //     console.log("init data")
     //     console.log(init)
     // }, [init])
-
+//TOOD this, on app.js to clear top level interval
     useEffect(() => {
         fetch(`http://${SERVER_ADDRESS}:3000/initiative?sort=true`)
         .then(response => response.json())
@@ -78,6 +79,13 @@ const Initiative = (props) => {
             setInit(data)
         })
 
+        fetch(`http://${SERVER_ADDRESS}:3000/ice`)
+        .then(response => response.json())
+        .then(data => {
+            setIces(data)
+        })
+
+
         const interval = setInterval(() => {
             fetch(`http://${SERVER_ADDRESS}:3000/initiative?sort=true`)
             .then(response => response.json())
@@ -85,6 +93,14 @@ const Initiative = (props) => {
                 // console.log("fetched initiative")
                 setInit(data)
             })
+
+            fetch(`http://${SERVER_ADDRESS}:3000/ice`)
+            .then(response => response.json())
+            .then(data => {
+                setIces(data)
+            })
+
+            
         }, 1000);
         return () => clearInterval(interval);
     }, []);
@@ -125,7 +141,7 @@ const Initiative = (props) => {
                         </div>
                         {
                             init.length > 0 ? init.map((i) => (
-                                <InitItem key={i.id} runners={props.runners} ownedCharacter={props.ownedCharacter} initItem={i} />
+                                <InitItem key={i.id} runners={props.runners} ownedCharacter={props.ownedCharacter} initItem={i} ices={ices}/>
                             )) : (
                                 <div className="list-group-item py-1 my-1">
                                     <div className="row">

@@ -36,7 +36,7 @@ var abilities = [
                             <button className="btn btn-primary btn-block" onClick={() => { resetModal(); props.doModalAction({"modalAction":"move", "targetroom":props.room.id})}}>Move Here</button>
                         </>
             } else {
-                console.log(props.runner)
+                // console.log(props.runner)
                 let showMoveDown = false
                 if(props.room.hasexits != null && props.room.hasexits == true) {
                     showMoveDown = true
@@ -53,6 +53,7 @@ var abilities = [
                         {props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen != true && <ModalModeButton mode="backdoor" modeName="Backdoor" setModalMode={setModalMode}/>}
                         {props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen != true && <ModalModeButton mode="password" modeName="Enter Password" setModalMode={setModalMode}/>}
                         {props.room.contents != null && props.room.contents.type == "file" && !props.runner.ids.includes(props.room.contents.id) && <ModalModeButton mode="eyedee" modeName="Eye Dee File" setModalMode={setModalMode}/>}
+                        {props.room.contents != null && props.room.contents.type == "controlpoint" && !props.runner.controlpoints.includes(props.room.contents.id) && <ModalModeButton mode="control" modeName="Control" setModalMode={setModalMode}/>}
                         {showMoveDown && <ModalModeButton mode="movedown" modeName="Move Down" setModalMode={setModalMode}/>}
                     </>
             }
@@ -135,6 +136,25 @@ var abilities = [
                 )
             }
 
+            if(modalMode == "control") {
+                retVal = (
+                    <>
+                        <form onSubmit={(f) => {f.preventDefault()}}>
+                            <div className="form-group">
+                                <label htmlFor="dc">Rolled DC for Control</label>
+                                <input className="form-control input" type="text" name="dc" id="dc" onChange={(e) => enteredDC.current = e.target.value}></input>
+                            </div>
+                            <button type="button" className="btn btn-primary" onClick={(e) => {
+                                e.preventDefault()
+                                console.log(`submitting control modal action ${props.room.id}`)
+                                props.doModalAction({"dv":enteredDC.current, "modalAction": modalMode, "roomid": props.room.id})
+                                resetModal()
+                            }}>Execute</button>
+                        </form>                        
+                    </>
+                )
+            }
+
         }
 
         setModalPanel(retVal)
@@ -144,7 +164,7 @@ var abilities = [
     }, [props.room, modalMode, props.distanceFromRunner, props.runner])
 
     const resetModal = () => {
-        console.log("resetting modal")
+        // console.log("resetting modal")
         setModalMode("buttons")
         props.setModalVisibility(false)
     }

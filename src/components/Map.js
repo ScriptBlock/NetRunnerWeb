@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import MapLayer from './MapLayer'
-import MapRoomModal from './MapRoomModal'
+// import MapRoomModal from './MapRoomModal'
 
 
 const Map = (props) => {
@@ -17,6 +17,7 @@ const Map = (props) => {
     // const [mapContents, setMapContents] = useState([])
 
     const refreshRoomData = (mapID) => {
+        console.log("refreshing room data")
         // localhost:3000/room/1?gathercontext=true&ownedCharacter=1        
 
         fetch(`http://${SERVER_ADDRESS}:3000/room/${mapID}?gathercontext=true&ownedcharacter=${props.ownedCharacter}`)
@@ -39,9 +40,19 @@ const Map = (props) => {
         // alert(`modal action clicked ${modalAction} with a rollDC of ${rolledDC}`)
         console.log(details)
         switch(details.modalAction) {
+            case "control": 
+                // app.post("/action/id/:netrunnerid", (req, res, next) => {
+                fetch(`http://${SERVER_ADDRESS}:3000/action/control/${props.ownedCharacter}`, {...dp, body: JSON.stringify({"dv": details.dv, "roomid": details.roomid}) })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("control action")
+                    refreshRoomData(props.activeMap)
+                })    
+                break
+
             case "eyedee": 
                 // app.post("/action/id/:netrunnerid", (req, res, next) => {
-                fetch(`http://${SERVER_ADDRESS}:3000/action/id/${props.ownedCharacter}`, {...dp, body: JSON.stringify({"dv": details.dv}) })
+                fetch(`http://${SERVER_ADDRESS}:3000/action/id/${props.ownedCharacter}`, {...dp, body: JSON.stringify({"dv": details.dv, "roomid": details.roomid}) })
                 .then(response => response.json())
                 .then(data => {
                     console.log("eyedee action")
@@ -86,8 +97,6 @@ const Map = (props) => {
 
             case "movedown":
                 console.log("moving down into some possible next room")
-                //app.post("/netrunner/:netrunnerid/movedown", (req, res, next) => {
-
                 fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}/movedown`, {...dp })
                 .then(response => response.json())
                 .then(data => {
@@ -100,6 +109,7 @@ const Map = (props) => {
                 console.log("passed invalid modalAction")
 
         }
+        // refreshRoomData(props.activeMap)
 
 
     }

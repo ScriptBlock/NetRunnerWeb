@@ -40,7 +40,7 @@ const MapLayer = (props) => {
         // console.log(currentRunner)
         let runnerRoom = props.rooms.find(r => r.id == currentRunner.roomid && r.mapid == currentRunner.mapid)
         let finalClass = "bg-secondary "
-        finalRoomContent.current = "Empty"
+        finalRoomContent.current = ""
         // console.log(`rendering room ${props.room.name}`)
 
         
@@ -49,11 +49,11 @@ const MapLayer = (props) => {
             if(props.room.contents.type == "password") {
                 if(props.room.roomopen) {
                     finalClass = "bg-primary "
-                    finalRoomContent.current = "Bypassed"
+                    finalRoomContent.current = "Password (Bypassed)"
 
                 } else {
                     finalClass = "bg-dark text-danger"
-                    finalRoomContent.current = "Locked"
+                    finalRoomContent.current = "Password (Locked)"
                 }
 
             }
@@ -61,16 +61,25 @@ const MapLayer = (props) => {
             if(props.room.contents.type == "file") {
                 if(currentRunner.ids.includes(props.room.contents.id)) {
                     finalClass = "text-warning"
-                    finalRoomContent.current = props.room.contents.details
+                    finalRoomContent.current = `File (${props.room.contents.details})`
                 } else {
                     finalClass = "text-light"
                     finalRoomContent.current = "File (NO ID)"
                 }
             }
 
+            if(props.room.contents.type == "controlpoint") {
+                if(currentRunner.controlpoints.includes(props.room.contents.id)) {
+                    finalClass = "text-success"
+                    finalRoomContent.current = `Controlled (${props.room.contents.details})`
+                } else {
+                    finalRoomContent.current = `Uncontrolled (${props.room.contents.details})`
+                    finalClass = "text-danger"
+                }
+            }
+
         }
 
-        roomSpan.current.className = finalClass
                 
         if(props.room.id == currentRunner.roomid && props.room.mapid == currentRunner.mapid) {
             //this is the room the player is in
@@ -100,7 +109,24 @@ const MapLayer = (props) => {
             }
         }
 
-        setNextRooms(props.rooms.filter(r => r.sourceroom == props.room.id))
+
+        if(props.room.ices != undefined && props.room.ices.length > 0) {
+            // console.log("this room has ice(s)")
+            // console.log(props.room.ices)
+            props.room.ices.map(i => (finalRoomContent.current = <>{finalRoomContent.current}<p className="bg-danger text-light">{i.name}</p></>))
+            //props.room.ices.map(i => (console.log(i.name)))
+        }
+
+
+        finalRoomContent.current = finalRoomContent.current == "" ? "Empty" : finalRoomContent.current
+        let nr = props.rooms.filter(r => r.sourceroom == props.room.id)
+        // if(nr.length == 0) {
+        //     finalClass = "bg-danger text-dark"
+        //     finalRoomContent.current = "Root"
+        // }
+        roomSpan.current.className = finalClass
+
+        setNextRooms(nr)
     }, [props.room, props.runners])
 
 

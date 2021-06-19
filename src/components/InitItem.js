@@ -56,6 +56,14 @@ const InitItem = (props) => {
             setThisItem(temp)
             setSelfBadge(temp.id == props.ownedCharacter)
         }        
+
+        if(props.initItem.type == "ice") {
+            console.log("found an ice in init")
+            let temp = props.ices.find(i => i.id != undefined && i.id == props.initItem.thingID)
+            console.log(temp)
+            temp.type="Ice"
+            setThisItem(temp)
+        }
     }, [props.initItem])
 
     if(props.initItem == undefined || props.initItem == null || thisItem.name == undefined || thisItem.name == null) {
@@ -70,11 +78,11 @@ const InitItem = (props) => {
             </div>
         )
     } else {
-        let speedField = `${thisItem.speed}/`
+        let speedField = `${thisItem.speed || thisItem.Spd}`
         if(thisItem.reflex != undefined) {
-            speedField += `${thisItem.reflex}`
+            speedField += `/${thisItem.reflex}`
         } else {
-            speedField += "N/A"
+            // speedField += "N/A"
         }
 
         let badge=""
