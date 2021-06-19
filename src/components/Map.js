@@ -1,3 +1,8 @@
+/* eslint eqeqeq: 0 */
+/* eslint no-unused-vars: 0 */
+/* eslint react-hooks/exhaustive-deps: 0 */
+
+
 import { useState, useEffect } from 'react'
 import MapLayer from './MapLayer'
 import MapRoomModal from './MapRoomModal'
@@ -34,6 +39,16 @@ const Map = (props) => {
         // alert(`modal action clicked ${modalAction} with a rollDC of ${rolledDC}`)
         console.log(details)
         switch(details.modalAction) {
+            case "eyedee": 
+                // app.post("/action/id/:netrunnerid", (req, res, next) => {
+                fetch(`http://${SERVER_ADDRESS}:3000/action/id/${props.ownedCharacter}`, {...dp, body: JSON.stringify({"dv": details.dv}) })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("eyedee action")
+                    refreshRoomData(props.activeMap)
+                })    
+                break
+
             case "backdoor": 
                 fetch(`http://${SERVER_ADDRESS}:3000/backdoor/${details.roomid}/${props.ownedCharacter}`, {...dp, body: JSON.stringify({"dv": details.dv}) })
                 .then(response => response.json())

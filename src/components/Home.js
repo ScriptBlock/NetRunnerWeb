@@ -1,3 +1,7 @@
+/* eslint eqeqeq: 0 */
+/* eslint no-unused-vars: 0 */
+/* eslint react-hooks/exhaustive-deps: 0 */
+
 import {useRef, useEffect, useState} from 'react'
 import data from '../Actions.json'
 import ExplainModal from './ExplainModal'

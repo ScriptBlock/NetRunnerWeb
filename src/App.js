@@ -1,3 +1,8 @@
+/* eslint eqeqeq: 0 */
+/* eslint no-unused-vars: 0 */
+/* eslint react-hooks/exhaustive-deps: 0 */
+
+
 import { useState, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 

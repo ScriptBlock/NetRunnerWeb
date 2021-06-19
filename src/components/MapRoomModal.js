@@ -1,3 +1,7 @@
+/* eslint eqeqeq: 0 */
+/* eslint no-unused-vars: 0 */
+/* eslint react-hooks/exhaustive-deps: 0 */
+
 import { useEffect, useState, useRef } from 'react'
 import Modal from "react-bootstrap/Modal";
 import ModalModeButton from './ModalModeButton'
@@ -32,6 +36,7 @@ var abilities = [
                             <button className="btn btn-primary btn-block" onClick={() => { resetModal(); props.doModalAction({"modalAction":"move", "targetroom":props.room.id})}}>Move Here</button>
                         </>
             } else {
+                console.log(props.runner)
                 let showMoveDown = false
                 if(props.room.hasexits != null && props.room.hasexits == true) {
                     showMoveDown = true
@@ -47,6 +52,7 @@ var abilities = [
                         <ModalModeButton mode="pathfind" modeName="Pathfinder" setModalMode={setModalMode}/>
                         {props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen != true && <ModalModeButton mode="backdoor" modeName="Backdoor" setModalMode={setModalMode}/>}
                         {props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen != true && <ModalModeButton mode="password" modeName="Enter Password" setModalMode={setModalMode}/>}
+                        {props.room.contents != null && props.room.contents.type == "file" && !props.runner.ids.includes(props.room.contents.id) && <ModalModeButton mode="eyedee" modeName="Eye Dee File" setModalMode={setModalMode}/>}
                         {showMoveDown && <ModalModeButton mode="movedown" modeName="Move Down" setModalMode={setModalMode}/>}
                     </>
             }
@@ -109,8 +115,25 @@ var abilities = [
                     </>
                 )
             }
-            //app.post("/enterpassword/:roomid/:netrunnerid", (req, res, next) => {
 
+            if(modalMode == "eyedee") {
+                retVal = (
+                    <>
+                        <form onSubmit={(f) => {f.preventDefault()}}>
+                            <div className="form-group">
+                                <label htmlFor="dc">Rolled DC for EyeDee</label>
+                                <input className="form-control input" type="text" name="dc" id="dc" onChange={(e) => enteredDC.current = e.target.value}></input>
+                            </div>
+                            <button type="button" className="btn btn-primary" onClick={(e) => {
+                                e.preventDefault()
+                                console.log(`submitting eyedee modal action ${props.room.id}`)
+                                props.doModalAction({"dv":enteredDC.current, "modalAction": modalMode, "roomid": props.room.id})
+                                resetModal()
+                            }}>Execute</button>
+                        </form>                        
+                    </>
+                )
+            }
 
         }
 
@@ -118,18 +141,19 @@ var abilities = [
         // return () => {
         //     cleanup
         // }
-    }, [props.room, modalMode, props.distanceFromRunner])
+    }, [props.room, modalMode, props.distanceFromRunner, props.runner])
 
     const resetModal = () => {
+        console.log("resetting modal")
         setModalMode("buttons")
         props.setModalVisibility(false)
     }
 
     return (
-        <Modal id={"modal"+props.room.id} show={props.showModal} onHide={() => resetModal()}>
+        <Modal id={"modal"+props.room.id} show={props.showModal} onHide={() => resetModal()} onClose={() => resetModal()}>
             <Modal.Header>
                 <h5 className="modal-title" id="exampleModalLongTitle">Room Actions ({props.room.name})</h5>
-                <button type="button" className="close" onClick={() => props.setModalVisibility(false)}>
+                <button type="button" className="close" onClick={() => resetModal()}>
                     <span aria-hidden="true">&times;</span>
                 </button>
             </Modal.Header>
@@ -137,7 +161,7 @@ var abilities = [
                 { modalPanel }
             </Modal.Body>
             <Modal.Footer>
-                <button type="button" className="btn btn-secondary" onClick={() => props.setModalVisibility(false)}>Close</button>
+                <button type="button" className="btn btn-secondary" onClick={() => resetModal()}>Close</button>
             </Modal.Footer>
         </Modal>
     )
