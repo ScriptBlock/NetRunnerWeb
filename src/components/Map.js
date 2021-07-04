@@ -132,6 +132,13 @@ const Map = (props) => {
                 </div>
             </div>
             <div className="row">
+                <div className="col pl-4 pt-5">
+                    <div className="">Hammer</div>
+                    <div className="">Skunk</div>
+                    <div className="">Button 1</div>
+                    <div className="">Button 1</div>
+
+                </div>
                 <div className="col">
                     <ul className="tree d-flex justify-content-center text-light">
                         { 

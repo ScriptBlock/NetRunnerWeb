@@ -105,6 +105,16 @@ const Home = (props) => {
                             <p className="">Go back to the character selection screen</p>
                         </button>
                     </div>
+                    {/*
+                    <div className="col justify-content-center text-center">
+                        <button className="btn bg-dark text-info my-1" style={{height:"100%"}} onClick={() => props.setPage("swiper")}>
+                            <h4 className="">Test Swiping</h4>
+                            <p className="">Test swiping</p>
+                        </button>
+                    </div>
+                    */
+                    }
+
                 </div>   
 
                 { data.map(d => (

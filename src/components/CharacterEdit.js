@@ -4,14 +4,32 @@
 
 import { useState, useEffect } from 'react'
 import CharacterAttribEdit from './CharacterAttribEdit'
+import ProgramEditItem from './ProgramEditItem'
 
 const CharacterEdit = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
 
 
     const [thisRunner, setThisRunner] = useState(props.myRunner)
+    const [programSlots, setProgramSlots] = useState([])
 
     const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
+
+    useEffect(() => {
+//        console.log("updating program count listing")
+        let installedProgramCount = props.myRunner.programs.length
+        let remainingSlots = props.myRunner.slots - installedProgramCount
+
+        let newSlotList = props.myRunner.programs
+ //       console.log("added existing programs")
+  //      console.log(newSlotList)
+        for(let i=0;i<remainingSlots;i++) {
+    //        console.log("pushing in null entry with remaining slots")
+            newSlotList.push({"id": (i+5000), "name": null})
+        }
+        setProgramSlots(newSlotList)
+
+    }, [props.myRunner])
 
     const changeCharType = (e) => {
         console.log(`Updating runner ${props.ownedCharacter} with new type ${e.target.value}`)
@@ -94,17 +112,26 @@ const CharacterEdit = (props) => {
                     {thisRunner.type}
                 </div>
             </div>
+
             <CharacterAttribEdit attrib="Interface" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
             <CharacterAttribEdit attrib="Slots" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
             <CharacterAttribEdit attrib="Speed" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
             <CharacterAttribEdit attrib="Reflex" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
             <CharacterAttribEdit attrib="Damage" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
 
+            <hr/>
 
+            {
+                programSlots.map(p => (
+
+                  <ProgramEditItem key={p.id} program={p}/> 
+                ))
+            }
+
+            <hr/>
 
             <div className="row">
                 <div className="col">
-                    <hr/>
                     <button onClick={() => (props.setPage("home"))} className="btn btn-primary" style={{width:"100%"}}>Home</button>
                 </div>
             </div>

@@ -18,8 +18,9 @@ import CharacterPicker from './components/CharacterPicker'
 import Netrunners from './components/Netrunners'
 import Map from './components/Map'
 import Initiative from './components/Initiative'
-import CharacterEdit from './components/CharacterEdit';
-import NetArchListing from './components/NetArchListing';
+import CharacterEdit from './components/CharacterEdit'
+import NetArchListing from './components/NetArchListing'
+import SwipeCarousel from './components/SwipeCarousel'
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
   const [myRunner, setMyRunner] = useState(null)
   const [activeJackIn, setActiveJackIn] = useState(0)
   const [runners, setRunners] = useState([])
+  const [ices, setIces] = useState([])
 
   const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
@@ -58,7 +60,7 @@ function App() {
       .then(
         (result) => {
           setRunners(result)
-          let mr = result.find(r=>r.owner == localID)
+          //let mr = result.find(r=>r.owner == localID)
           //setMyRunner(mr)
 
           // console.log("refreshed netrunner list")
@@ -67,6 +69,13 @@ function App() {
           // }
         }
       )
+
+    fetch(`http://${SERVER_ADDRESS}:3000/ice`)
+      .then(response => response.json())
+      .then(data => {
+          setIces(data)
+      }
+    )
   }
 
   useEffect(() => {
@@ -75,7 +84,7 @@ function App() {
   //   return () => clearTimeout(timeout);
       let mr = runners.find(r=>r.owner == localID)
       setMyRunner(mr)
-}, [runners, localID]);
+  }, [runners, localID]);
 
 
   useEffect(() => {
@@ -134,6 +143,9 @@ function App() {
       const interval = setInterval(() => {
         refreshRunners()
       }, 2000);
+
+      return () => clearInterval(interval);
+
 
     }, [])
 
@@ -252,7 +264,7 @@ function App() {
         return (<CharacterEdit myRunner={myRunner} ownedCharacter={ownedCharacter} refreshRunners={refreshRunners}  setPage={setPage}/>)  
       }
       if(page == "init") {
-        return (<Initiative runners={runners}  setPage={setPage} ownedCharacter={ownedCharacter}/>)
+        return (<Initiative runners={runners}  setPage={setPage} ownedCharacter={ownedCharacter} ices={ices}/>)
       }
       if(page == "netrunner") {
         if(activeJackIn > 0) {
@@ -260,6 +272,9 @@ function App() {
         } else {      
           return (<NetArchListing playerID={ownedCharacter} jackIn={jackIn}/>)
         }
+      }
+      if(page == "swiper") {
+        return (<SwipeCarousel />)
       }
     }
   }
