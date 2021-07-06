@@ -2,9 +2,11 @@
 /* eslint no-unused-vars: 0 */
 /* eslint react-hooks/exhaustive-deps: 0 */
 
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import CharacterAttribEdit from './CharacterAttribEdit'
 import ProgramEditItem from './ProgramEditItem'
+import Modal from "react-bootstrap/Modal"
+
 
 const CharacterEdit = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
@@ -12,8 +14,22 @@ const CharacterEdit = (props) => {
 
     const [thisRunner, setThisRunner] = useState(props.myRunner)
     const [programSlots, setProgramSlots] = useState([])
+    const [showInstallModal, setShowInstallModal] = useState(false)
+    const programList = useRef([])
 
     const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
+
+    useEffect(() => {
+        fetch(`http://${SERVER_ADDRESS}:3000/programs`)
+        .then(response => response.json())
+        .then(data => {
+            programList.current = data
+            //console.log("fetched room data")
+            //console.log(data)
+        })
+
+
+    }, [])
 
     useEffect(() => {
 //        console.log("updating program count listing")
@@ -31,6 +47,10 @@ const CharacterEdit = (props) => {
 
     }, [props.myRunner])
 
+    const doShowInstallModal = () => {
+        setShowInstallModal(true)
+    }
+
     const changeCharType = (e) => {
         console.log(`Updating runner ${props.ownedCharacter} with new type ${e.target.value}`)
 /*
@@ -46,15 +66,29 @@ const CharacterEdit = (props) => {
             console.log("updated character")
             props.refreshRunners()
             setThisRunner({...thisRunner, type: data.find(r => r.id == props.ownedCharacter).type})
+
         })    
     }
 
-    let goHome = () => {
+    const goHome = () => {
         console.log("going hmoe")
         props.setPage("home")
     }
 
-    let decreaseAttribute = (attrib) => {
+    const installProgram = (progName) => {
+        console.log(`installing program ${progName} for player`)
+        fetch(`http://${SERVER_ADDRESS}:3000/programs/install/${props.ownedCharacter}`, {...dp, body: JSON.stringify({"programName": progName}) })
+        .then(response => response.json())
+        .then(data => {
+            console.log("tried to add program")
+            props.refreshRunners()
+            setShowInstallModal(false)
+
+        })    
+        
+    }
+
+    const decreaseAttribute = (attrib) => {
         console.log(`decrease attribute ${attrib}`)
         let newValue = thisRunner[attrib] -= 1
         console.log(newValue)
@@ -74,7 +108,7 @@ const CharacterEdit = (props) => {
     }
 
 
-    let increaseAttribute = (attrib) => {
+    const increaseAttribute = (attrib) => {
         console.log(`increase attribute ${attrib}`)
         let newValue = thisRunner[attrib] += 1
         console.log(newValue)
@@ -90,8 +124,6 @@ const CharacterEdit = (props) => {
             newRunner[attrib] = newValue
             setThisRunner(newRunner)
         })    
-
-        
     }
 
     return (
@@ -124,7 +156,7 @@ const CharacterEdit = (props) => {
             {
                 programSlots.map(p => (
 
-                  <ProgramEditItem key={p.id} program={p}/> 
+                  <ProgramEditItem key={p.id} program={p} doShowInstallModal={doShowInstallModal}/> 
                 ))
             }
 
@@ -136,6 +168,37 @@ const CharacterEdit = (props) => {
                 </div>
             </div>
 
+            <Modal id={"AddProgramModal"} show={showInstallModal} onHide={() => {setShowInstallModal(false)}} onClose={() => {setShowInstallModal(false)}}>
+                <Modal.Header>
+                    <h5 className="modal-title" id="exampleModalLongTitle">Install A Program</h5>
+                    <button type="button" className="close" onClick={() => {setShowInstallModal(false)}}>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    { 
+                        programList.current.map(p => (
+                            <div 
+                                key={Math.random()} 
+                                className="mb-2 p-1 bg-secondary" 
+                                style={{border: "solid .2em black"}}
+                                onClick={() => {installProgram(p.name)}}                            
+                            >
+                                <h4>{p.name}</h4>
+                                <hr className="p-0 m-0 bg-warning"/>
+                                <span>{p.effect}</span>
+                            </div>
+                            
+                        ))
+                        // add program listing here
+                    }
+                </Modal.Body>
+                <Modal.Footer>
+                    <button type="button" className="btn btn-secondary" onClick={() => {setShowInstallModal(false)}}>Close</button>
+                </Modal.Footer>
+            </Modal>
+
+
         </div>
     )
 }
@@ -145,7 +208,33 @@ export default CharacterEdit
 
 /*
 
-            <div className="row">
+            <Modal id={"AddProgramModal"} show={showInstallModal} onHide={() => resetModal()} onClose={() => resetModal()}>
+                <Modal.Header>
+                    <h5 className="modal-title" id="exampleModalLongTitle">Room Actions ({props.room.name})</h5>
+                    <button type="button" className="close" onClick={() => resetModal()}>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    { modalPanel }
+                </Modal.Body>
+                <Modal.Footer>
+                    <button type="button" className="btn btn-secondary" onClick={() => resetModal()}>Close</button>
+                </Modal.Footer>
+            </Modal>
+
+
+
+
+
+
+
+
+
+
+
+
+<div className="row">
                 <div className="col text-center bg-secondary border"><h3>Interface</h3><hr/></div>
             </div>
             <div className="row text-center d-flex justify-content-center py-2 bg-dark text-info">

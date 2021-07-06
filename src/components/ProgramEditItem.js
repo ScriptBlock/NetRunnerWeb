@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 
+
 //TODO add click to remove action
 //add click to install for blanks
 
@@ -24,18 +25,20 @@ const ProgramEditItem = (props) => {
 
     }, [props.program])
 
-    // useEffect(() => {
 
-
-    // }, [])
+    const launchModal = (id) => {
+        if(id >= 5000) {
+            props.doShowInstallModal()
+        }
+    }
 
     return (
-            <div className="row my-2" style={style} onClick={()=> (console.log(props.program))}>
+            <div className="row my-2" style={style} onClick={()=> { launchModal(props.program.id) }}>
                 <div className="col" >
-                    <div className="h3 py-2 text-center">{header}</div>
-                    <div className="p py-2 text-center">{body}</div>
-
+                    <div className="h3 pt-2 text-center">{header}</div>
+                    <div className="p pb-2 text-center">{body}</div>
                 </div>                
+
             </div>
         )
 }
@@ -43,7 +46,14 @@ const ProgramEditItem = (props) => {
 export default ProgramEditItem
 
 
+
 /*
+
+
+
+
+
+
 
             <div className="row my-2" style={{border: "dashed .3em purple"}} onClick={()=> (console.log(props.myRunner))}>
                 <div className="col" >
