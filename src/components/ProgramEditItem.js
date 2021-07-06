@@ -11,16 +11,19 @@ const ProgramEditItem = (props) => {
     const [body, setBody] = useState("")
 
     useEffect(() => {
-//        console.log("sdijfsdif")
+        let finalStyle = {}
         if(props.program.name == null) {
-            setStyle({border: "dashed .3em purple"})
+            // setStyle({border: "dashed .3em purple"})
+            finalStyle = {border: "dashed .3em purple"}
             setHeader("Empty Slot")
             setBody("This slot is open to install programs")
         } else {
-            setStyle({border: "solid .3em blue"})
+            // setStyle({border: "solid .3em blue"})
+            finalStyle = {border: "solid .3em blue"}
             setHeader(props.program.name)
             setBody(props.program.effect)
         }
+        setStyle(finalStyle)
 
 
     }, [props.program])
@@ -29,11 +32,13 @@ const ProgramEditItem = (props) => {
     const launchModal = (id) => {
         if(id >= 5000) {
             props.doShowInstallModal()
+        } else {
+            props.doShowRemoveModal(id)
         }
     }
 
     return (
-            <div className="row my-2" style={style} onClick={()=> { launchModal(props.program.id) }}>
+            <div className="row my-2 progpicker" style={style} onClick={()=> { launchModal(props.program.id) }} >
                 <div className="col" >
                     <div className="h3 pt-2 text-center">{header}</div>
                     <div className="p pb-2 text-center">{body}</div>

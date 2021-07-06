@@ -15,7 +15,9 @@ const CharacterEdit = (props) => {
     const [thisRunner, setThisRunner] = useState(props.myRunner)
     const [programSlots, setProgramSlots] = useState([])
     const [showInstallModal, setShowInstallModal] = useState(false)
+    const [showRemoveModal, setShowRemoveModal] = useState(false)
     const programList = useRef([])
+    const programToRemove = useRef()
 
     const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
@@ -51,6 +53,11 @@ const CharacterEdit = (props) => {
         setShowInstallModal(true)
     }
 
+    const doShowRemoveModal = (id) => {
+        setShowRemoveModal(true)
+        programToRemove.current = id
+    }    
+
     const changeCharType = (e) => {
         console.log(`Updating runner ${props.ownedCharacter} with new type ${e.target.value}`)
 /*
@@ -73,6 +80,20 @@ const CharacterEdit = (props) => {
     const goHome = () => {
         console.log("going hmoe")
         props.setPage("home")
+    }
+
+    const removeProgram = (id) => {
+        console.log(`removing program ${id} for player`)
+        fetch(`http://${SERVER_ADDRESS}:3000/programs/remove/${id}`, {method: "DELETE", headers: {'Content-Type': 'application/json'}})
+        .then(response => response.json())
+        .then(data => {
+            console.log("tried to remove program")
+            props.refreshRunners()
+            setShowRemoveModal(false)
+            programToRemove.current = null
+        })    
+        
+
     }
 
     const installProgram = (progName) => {
@@ -156,7 +177,7 @@ const CharacterEdit = (props) => {
             {
                 programSlots.map(p => (
 
-                  <ProgramEditItem key={p.id} program={p} doShowInstallModal={doShowInstallModal}/> 
+                  <ProgramEditItem key={p.id} program={p} doShowInstallModal={doShowInstallModal} doShowRemoveModal={doShowRemoveModal}/> 
                 ))
             }
 
@@ -180,7 +201,7 @@ const CharacterEdit = (props) => {
                         programList.current.map(p => (
                             <div 
                                 key={Math.random()} 
-                                className="mb-2 p-1 bg-secondary" 
+                                className="mb-2 p-1 bg-secondary progpicker" 
                                 style={{border: "solid .2em black"}}
                                 onClick={() => {installProgram(p.name)}}                            
                             >
@@ -195,6 +216,22 @@ const CharacterEdit = (props) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <button type="button" className="btn btn-secondary" onClick={() => {setShowInstallModal(false)}}>Close</button>
+                </Modal.Footer>
+            </Modal>
+
+
+            <Modal id={"RemoveProgramModal"} show={showRemoveModal} onHide={() => {setShowRemoveModal(false)}} onClose={() => {setShowRemoveModal(false)}}>
+                <Modal.Header>
+                    <h5 className="modal-title" id="exampleModalLongTitle">Remove This Program</h5>
+                    <button type="button" className="close" onClick={() => {setShowRemoveModal(false)}}>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <button className="btn btn-block btn-danger" onClick={() => {removeProgram(programToRemove.current)}}>Remove</button>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button type="button" className="btn btn-secondary" onClick={() => {setShowRemoveModal(false)}}>Close</button>
                 </Modal.Footer>
             </Modal>
 
