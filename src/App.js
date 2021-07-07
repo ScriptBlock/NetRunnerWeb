@@ -15,7 +15,7 @@ import ProgramItem from './components/ProgramItem'
 */
 import Home from './components/Home'
 import CharacterPicker from './components/CharacterPicker'
-import Netrunners from './components/Netrunners'
+//import Netrunners from './components/Netrunners'
 import Map from './components/Map'
 import Initiative from './components/Initiative'
 import CharacterEdit from './components/CharacterEdit'
@@ -32,7 +32,7 @@ function App() {
   const [ownedCharacter, setOwnedCharacter] = useState(null)
   const [page, setPage] = useState("home")
   const [myRunner, setMyRunner] = useState(null)
-  const [activeJackIn, setActiveJackIn] = useState(0)
+  // const [activeJackIn, setActiveJackIn] = useState(0)
   const [runners, setRunners] = useState([])
   const [ices, setIces] = useState([])
 
@@ -175,12 +175,12 @@ function App() {
    */   
   
 
-  const newNetrunnerClick = (e) => {
-    console.log("new netrunner")
-    //make api call to make a new netrunner
-    setRunners([...runners, {"id": 2, "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "discoveredrooms":[], "owner":0, "type":"Other"} ])
+  // const newNetrunnerClick = (e) => {
+  //   console.log("new netrunner")
+  //   //make api call to make a new netrunner
+  //   setRunners([...runners, {"id": 2, "interface": 4, "totalSlots": 3, "speed": 4, "damage": 0, "discoveredrooms":[], "owner":0, "type":"Other"} ])
 
-  }
+  // }
 
   /*
   const newInitItem = (e) => {
@@ -238,11 +238,27 @@ function App() {
   }
 
   const jackIn = (id) => {
-    setActiveJackIn(id)
+    // setActiveJackIn(id)
+    fetch(`http://${SERVER_ADDRESS}:3000/map/jackin/${ownedCharacter}/${id}`, dp)
+    .then(response => response.json())
+    .then(data => {
+      console.log("tried to jack in character")
+      console.log(data)
+      refreshRunners()
+    })
+
   }
 
   const jackOut = () => {
-    setActiveJackIn(0)
+    // setActiveJackIn(0)
+    fetch(`http://${SERVER_ADDRESS}:3000/map/jackout/${ownedCharacter}`, dp)
+    .then(response => response.json())
+    .then(data => {
+      console.log("tried to jack out character")
+      console.log(data)
+      refreshRunners()
+    })
+
   }
 
   if (error) {
@@ -267,8 +283,9 @@ function App() {
         return (<Initiative runners={runners}  setPage={setPage} ownedCharacter={ownedCharacter} ices={ices}/>)
       }
       if(page == "netrunner") {
-        if(activeJackIn > 0) {
-          return (<Map ownedCharacter={ownedCharacter} runners={runners} activeMap={activeJackIn} refreshRunners={refreshRunners} jackOut={jackOut} setPage={setPage}/>)
+        let runnerCurrentMap = runners.find(n => n.id == ownedCharacter).mapid 
+        if(runnerCurrentMap != -1) {
+          return (<Map ownedCharacter={ownedCharacter} runners={runners} refreshRunners={refreshRunners} jackOut={jackOut} setPage={setPage}/>)
         } else {      
           return (<NetArchListing playerID={ownedCharacter} jackIn={jackIn}/>)
         }

@@ -4,7 +4,9 @@
 
 
 import { useState, useEffect } from 'react'
+
 import MapLayer from './MapLayer'
+import ProgramItem from './ProgramItem'
 // import MapRoomModal from './MapRoomModal'
 
 
@@ -14,10 +16,11 @@ const Map = (props) => {
 
 
     const [roomData, setRoomData] = useState([])
+    const [activeMap, setActiveMap] = useState(-1)
     // const [mapContents, setMapContents] = useState([])
 
     const refreshRoomData = (mapID) => {
-        console.log("refreshing room data")
+        console.log(`refreshing room data for ${mapID}`)
         // localhost:3000/room/1?gathercontext=true&ownedCharacter=1        
 
         fetch(`http://${SERVER_ADDRESS}:3000/room/${mapID}?gathercontext=true&ownedcharacter=${props.ownedCharacter}`)
@@ -46,7 +49,7 @@ const Map = (props) => {
                 .then(response => response.json())
                 .then(data => {
                     console.log("control action")
-                    refreshRoomData(props.activeMap)
+                    refreshRoomData(activeMap)
                 })    
                 break
 
@@ -56,7 +59,7 @@ const Map = (props) => {
                 .then(response => response.json())
                 .then(data => {
                     console.log("eyedee action")
-                    refreshRoomData(props.activeMap)
+                    refreshRoomData(activeMap)
                 })    
                 break
 
@@ -65,7 +68,7 @@ const Map = (props) => {
                 .then(response => response.json())
                 .then(data => {
                     console.log("backdoor action")
-                    refreshRoomData(props.activeMap)
+                    refreshRoomData(activeMap)
                 })    
                 break
             
@@ -74,16 +77,16 @@ const Map = (props) => {
                 .then(response => response.json())
                 .then(data => {
                     console.log("password action")
-                    refreshRoomData(props.activeMap)
+                    refreshRoomData(activeMap)
                 })    
                 break
 
             case "pathfind": 
-                fetch(`http://${SERVER_ADDRESS}:3000/pathfind/${props.ownedCharacter}/${props.activeMap}`, {...dp, body: JSON.stringify({"dv": details.dv, "startingroom": details.startingroom, "maxdepth": details.dv}) })
+                fetch(`http://${SERVER_ADDRESS}:3000/pathfind/${props.ownedCharacter}/${activeMap}`, {...dp, body: JSON.stringify({"dv": details.dv, "startingroom": details.startingroom, "maxdepth": details.dv}) })
                 .then(response => response.json())
                 .then(data => {
                     console.log("did pathfinder action")
-                    refreshRoomData(props.activeMap)
+                    refreshRoomData(activeMap)
                 })    
                 break
             case "move":
@@ -91,7 +94,7 @@ const Map = (props) => {
                 .then(response => response.json())
                 .then(data => {
                     console.log("tried to move the netrunner to the target room")
-                    refreshRoomData(props.activeMap)
+                    refreshRoomData(activeMap)
                 })    
                 break
 
@@ -101,7 +104,7 @@ const Map = (props) => {
                 .then(response => response.json())
                 .then(data => {
                     console.log("tried to move the netrunner to the target room")
-                    refreshRoomData(props.activeMap)
+                    refreshRoomData(activeMap)
                 })    
                 break
 
@@ -109,20 +112,38 @@ const Map = (props) => {
                 console.log("passed invalid modalAction")
 
         }
-        // refreshRoomData(props.activeMap)
+        // refreshRoomData(activeMap)
 
 
     }
 
     useEffect(() => {
-        refreshRoomData(props.activeMap)
+        setActiveMap(props.runners.find(r=> r.id == props.ownedCharacter).mapid)
+    }, props.runners)
+
+    useEffect(() => {
+        refreshRoomData(props.runners.find(r=> r.id == props.ownedCharacter).mapid)
     }, [])
 
+    const buildPrograms = () => {
+        let progs = []
+        let runnerProgs = props.runners.find(r => r.id == props.ownedCharacter).programs
+        // for(var i=0;i<props.runners.fine(r => r.id == props.ownedCharacter).programs.length;i++) {
+        //     progs.push(<MapProgramListing key={i} item={i}></MapProgramListing>)
+        // }
+        runnerProgs.forEach((p,i)=>{
+            progs.push(<ProgramItem key={i} program={p}></ProgramItem>)
+        })
+
+        
+        return progs
+    }
+
     return (
-        <div className="container-flex bg-dark">
+        <div className="container-flex bg-dark pb-5">
             <div className="row">
                 <div className="col">
-                    <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { refreshRoomData(props.activeMap) }}>Refresh</button>
+                    <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { refreshRoomData(activeMap) }}>Refresh</button>
                 </div>
                 <div className="col">
                     <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { props.jackOut() }}>Jack Out</button>
@@ -131,16 +152,10 @@ const Map = (props) => {
                     <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { props.setPage("home") }}>Home</button>
                 </div>
             </div>
-            <div className="row">
-                <div className="col pl-4 pt-5">
-                    <div className="">Hammer</div>
-                    <div className="">Skunk</div>
-                    <div className="">Button 1</div>
-                    <div className="">Button 1</div>
-
-                </div>
+            <hr className="bg-white"></hr>
+            <div className="row d-block overflow-auto" style={{height: 400}}>
                 <div className="col">
-                    <ul className="tree d-flex justify-content-center text-light">
+                    <ul className="h-25 tree d-flex justify-content-center text-light">
                         { 
                             roomData.length > 0 && (
                                 <MapLayer key="0" ownedCharacter={props.ownedCharacter} doModalAction={doModalAction} runners={props.runners} rooms={roomData} room={roomData.find(r=>r.sourceroom == undefined)}/>
@@ -150,22 +165,32 @@ const Map = (props) => {
                 </div>
             </div>            
 
-            {
-                // roomData.map(r => (
-                //     <MapRoomModal key={r.id} room={r} doModalAction={doModalAction}/>
-                // ))
-            }
+            <hr className="bg-white"/>
+            <div className="row m-2">
+                <div className="col m-1 p-0">
+                        <div className="card-columns" style={{columnCount:3}}>
+                        { buildPrograms() 
+                        }
+                        </div>
+                </div>
+            </div>
         </div>
     )
 }
 
-//TODO build modal helpers here.  don't need to respect visibility.  these modals will only be called from visible node clicks
 
 export default Map
 
 
 /*
+            <MapProgramListing programs={props.runners.find(r => r.id == props.ownedCharacter).programs} />
 
+
+            {
+                // roomData.map(r => (
+                //     <MapRoomModal key={r.id} room={r} doModalAction={doModalAction}/>
+                // ))
+            }
 
         <div className="container-flex bg-dark">
             <div className="row">
