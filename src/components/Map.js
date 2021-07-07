@@ -3,20 +3,21 @@
 /* eslint react-hooks/exhaustive-deps: 0 */
 
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import MapLayer from './MapLayer'
 import ProgramItem from './ProgramItem'
-// import MapRoomModal from './MapRoomModal'
+import Modal from "react-bootstrap/Modal"
 
 
 const Map = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
     const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
-
+    const programToggle = useRef()
     const [roomData, setRoomData] = useState([])
     const [activeMap, setActiveMap] = useState(-1)
+    const [showRezModal, setShowRezModal] = useState(false)
     // const [mapContents, setMapContents] = useState([])
 
     const refreshRoomData = (mapID) => {
@@ -90,7 +91,7 @@ const Map = (props) => {
                 })    
                 break
             case "move":
-                fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}/move/${details.targetroom}`, {...dp })
+                fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}/move/${details.targetroom}`, dp)
                 .then(response => response.json())
                 .then(data => {
                     console.log("tried to move the netrunner to the target room")
@@ -100,11 +101,29 @@ const Map = (props) => {
 
             case "movedown":
                 console.log("moving down into some possible next room")
-                fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}/movedown`, {...dp })
+                fetch(`http://${SERVER_ADDRESS}:3000/netrunner/${props.ownedCharacter}/movedown`, dp )
                 .then(response => response.json())
                 .then(data => {
                     console.log("tried to move the netrunner to the target room")
                     refreshRoomData(activeMap)
+                })    
+                break
+            case "activateprogram":
+                console.log(`Activating a program: ${details.id}`)
+                fetch(`http://${SERVER_ADDRESS}:3000/programs/activate/${details.id}`, dp)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("tried to activate the program")
+                    setShowRezModal(false)
+                })    
+                break
+            case "deactivateprogram":
+                console.log(`Deactivating a program: ${details.id}`)
+                fetch(`http://${SERVER_ADDRESS}:3000/programs/deactivate/${details.id}`, dp)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("tried to activate the program")
+                    setShowRezModal(false)
                 })    
                 break
 
@@ -132,11 +151,18 @@ const Map = (props) => {
         //     progs.push(<MapProgramListing key={i} item={i}></MapProgramListing>)
         // }
         runnerProgs.forEach((p,i)=>{
-            progs.push(<ProgramItem key={i} program={p}></ProgramItem>)
+            progs.push(<ProgramItem key={i} program={p} toggleState={toggleProgramState}></ProgramItem>)
         })
 
         
         return progs
+    }
+
+    const toggleProgramState = (program) => {
+        console.log("clicked an app to toggle state")
+        console.log(program)
+        programToggle.current = program
+        setShowRezModal(true)
     }
 
     return (
@@ -174,7 +200,35 @@ const Map = (props) => {
                         </div>
                 </div>
             </div>
+
+            {
+                programToggle.current != undefined &&
+                    <Modal id="programRezDerezModal" show={showRezModal} onHide={() => { setShowRezModal(false)}} onClose={() => { setShowRezModal(false)}}>
+                        <Modal.Header>
+                            <h5 className="modal-title" id="exampleModalLongTitle">Rez / Derez Program: { programToggle.current.name }</h5>
+                            <button type="button" className="close" onClick={() => { setShowRezModal(false)}}>
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </Modal.Header>
+            
+                        <Modal.Body>
+                            { 
+                                programToggle.current !=undefined && programToggle.current.isactivated ? 
+                                    <button className="btn btn-block btn-danger" onClick={() => { doModalAction({"modalAction": "deactivateprogram", "id": programToggle.current.id})}}>Derezz Program?</button> :
+                                    <button className="btn btn-block btn-success" onClick={() => { doModalAction({"modalAction": "activateprogram", "id": programToggle.current.id})}}>Rezz Program?</button>
+                            }
+                        </Modal.Body>
+                
+                        <Modal.Footer>
+                            <button type="button" className="btn btn-secondary" onClick={() => { setShowRezModal(false)}}>Close</button>
+                        </Modal.Footer>
+                    </Modal>
+            }
+
+
         </div>
+
+
     )
 }
 

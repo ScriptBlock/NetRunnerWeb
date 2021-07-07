@@ -15,12 +15,10 @@ import ProgramItem from './components/ProgramItem'
 */
 import Home from './components/Home'
 import CharacterPicker from './components/CharacterPicker'
-//import Netrunners from './components/Netrunners'
 import Map from './components/Map'
 import Initiative from './components/Initiative'
 import CharacterEdit from './components/CharacterEdit'
 import NetArchListing from './components/NetArchListing'
-import SwipeCarousel from './components/SwipeCarousel'
 
 
 function App() {
@@ -289,9 +287,6 @@ function App() {
         } else {      
           return (<NetArchListing playerID={ownedCharacter} jackIn={jackIn}/>)
         }
-      }
-      if(page == "swiper") {
-        return (<SwipeCarousel />)
       }
     }
   }
