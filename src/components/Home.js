@@ -21,14 +21,11 @@ const Home = (props) => {
 
     if(me != null) {
         return (
-            <div className="container flex-column" role="main">
-                <h1>Player Actions for {me.name}</h1>
+            <div className="container bg-secondary" role="main">
 
                 <div className="row text-center">
-                    <div className="col text-center justify-content-center p-0 m-0">
-                        <button className="btn btn-secondary btn-block bg-dark text-info my-1" onClick={() => props.setPage("init")}>
-                            <h4 className="">Initiative</h4>
-                        </button>
+                    <div className="col text-center justify-content-center ">
+                        <div className="h3 m-2">---[{me.name}]---</div>
                     </div>
                 </div>
 
@@ -75,34 +72,35 @@ const Home = (props) => {
                     </div>    
                 </div>  
 
-                { me.type == "Netrunner" ? (
-                <div className="row bg-secondary py-3">
-                    <div className="col text-center">
-                        <button className="btn btn-info btn-block px-5" onClick={() => props.setPage("netrunner")}>Netrun</button>
+                { me.type == "Netrunner" && (
+                    <div className="row bg-secondary py-3" style={{borderBottom: "solid #000", borderTop: "solid #000"}}>
+                        <div className="col text-center">
+                            <button className="btn btn-warning btn-block px-5" onClick={() => props.setPage("netrunner")}>Netrun</button>
+                        </div>
                     </div>
-                </div>
-                ) : "" }
+                ) }
 
-                <div className="row bg-secondary py-3 flex-fill">
-                    <div className="col text-center flex-column">
+                <div className="row bg-secondary py-3">
+                    <div className="col">
 
                         { data.map(d => (
-                            <button key={d.id} type="button" className="btn btn-info px-4 py-3 m-2" data-toggle="modal" data-target={"#"+d.id}>{d.title}</button>
+                            <button key={d.id} type="button" style={{width: "150px"}} className="btn btn-info mx-2 my-2" data-toggle="modal" data-target={"#"+d.id}>{d.title}</button>
                         ))}
                     </div>
                 </div>
 
-                <div className="row">
+                <div className="row" style={{borderTop: "solid #000"}}>
+
                     <div className="col justify-content-center text-center">
-                        <button className="btn bg-dark text-info my-1" style={{height:"100%"}} onClick={() => props.setPage("settings")}>
-                            <h4 className="">Change My Settings</h4>
-                            <p className="">Change your character options</p>
+                        <button className="btn bg-dark btn-block text-info my-1" style={{height:"100%"}} onClick={() => props.setPage("init")}>
+                            <h4 className="">Initiative</h4>
+                            <p className="">View Initiative Interface</p>
                         </button>
                     </div>
                     <div className="col justify-content-center text-center">
-                        <button className="btn bg-dark text-info my-1" style={{height:"100%"}} onClick={() => props.releaseCharacter(props.ownedCharacter)}>
-                            <h4 className="">Release ownership of this character</h4>
-                            <p className="">Go back to the character selection screen</p>
+                        <button className="btn bg-dark btn-block text-info my-1" style={{height:"100%"}} onClick={() => props.setPage("settings")}>
+                            <h4 className="">Character Settings</h4>
+                            <p className="">Change your character options</p>
                         </button>
                     </div>
                     {/*
@@ -116,7 +114,14 @@ const Home = (props) => {
                     }
 
                 </div>   
-
+                <div className="row mt-4">
+                    <div className="col justify-content-center text-center">
+                        <button className="btn bg-dark btn-block text-warning my-1" style={{height:"100%"}} onClick={() => props.releaseCharacter(props.ownedCharacter)}>
+                            <h4 className="">Release ownership of this character</h4>
+                            <p className="">Go back to the character selection screen</p>
+                        </button>
+                    </div>
+                </div>
                 { data.map(d => (
                         <ExplainModal key={d.id} data={d} />
                     )

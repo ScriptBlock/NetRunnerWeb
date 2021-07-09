@@ -1,7 +1,7 @@
 
 const CharacterAttribEdit = (props) => {
     return (
-        <div className="row border">
+        <div className="row border bg-light">
             <div className="col">{props.attrib}</div>
             <div className="col-2  text-right">
                 <button className="btn btn-primary" onClick={() => (props.decreaseAttribute(props.attrib.toLowerCase()))}>Less</button>

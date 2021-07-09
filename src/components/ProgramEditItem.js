@@ -14,12 +14,12 @@ const ProgramEditItem = (props) => {
         let finalStyle = {}
         if(props.program.name == null) {
             // setStyle({border: "dashed .3em purple"})
-            finalStyle = {border: "dashed .3em purple"}
+            finalStyle = {border: "dashed .3em purple", background: "lightgrey"}
             setHeader("Empty Slot")
             setBody("This slot is open to install programs")
         } else {
             // setStyle({border: "solid .3em blue"})
-            finalStyle = {border: "solid .3em blue"}
+            finalStyle = {border: "solid .3em blue", background: "lightblue"}
             setHeader(props.program.name)
             setBody(props.program.effect)
         }

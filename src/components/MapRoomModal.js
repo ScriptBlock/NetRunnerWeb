@@ -30,6 +30,7 @@ var abilities = [
 
     useEffect(() => {
         let retVal = null
+        let tracked = false
         if(modalMode == "buttons") {
             if(props.distanceFromRunner > 0) {
                 retVal = <>
@@ -38,15 +39,24 @@ var abilities = [
             } else {
                 // console.log(props.runner)
                 let showMoveDown = false
+                let canSlideDown = false
                 if(props.room.hasexits != null && props.room.hasexits == true) {
                     showMoveDown = true
+                    canSlideDown = true
                     if(props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen == false) {
                         showMoveDown = false
+                        canSlideDown = false
                     }
                     if(props.rooms.filter(r => r.sourceroom == props.room.id).length > 0)  {
                         showMoveDown = false
                     }
                 }
+
+                props.room.ices.forEach(i => {
+                    if(i.tracking == props.runner.id && props.runner.mapid == i.mapid && props.runner.roomid == i.roomid) {
+                        tracked = true
+                    }
+                })
 
                 retVal = <>
                         <ModalModeButton mode="pathfind" modeName="Pathfinder" setModalMode={setModalMode}/>
@@ -54,6 +64,9 @@ var abilities = [
                         {props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen != true && <ModalModeButton mode="password" modeName="Enter Password" setModalMode={setModalMode}/>}
                         {props.room.contents != null && props.room.contents.type == "file" && !props.runner.ids.includes(props.room.contents.id) && <ModalModeButton mode="eyedee" modeName="Eye Dee File" setModalMode={setModalMode}/>}
                         {props.room.contents != null && props.room.contents.type == "controlpoint" && !props.runner.controlpoints.includes(props.room.contents.id) && <ModalModeButton mode="control" modeName="Control" setModalMode={setModalMode}/>}
+                        {tracked && <ModalModeButton mode="slideup" modeName="Slide Up" setModalMode={setModalMode}/> }
+                        {tracked && canSlideDown && <ModalModeButton mode="slidedown" modeName="Slide Down" setModalMode={setModalMode}/> }
+
                         {/* TODO if tracked, add the slide capability */}
                         {showMoveDown && <ModalModeButton mode="movedown" modeName="Move Down" setModalMode={setModalMode}/>}
                     </>

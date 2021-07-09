@@ -148,31 +148,44 @@ const CharacterEdit = (props) => {
     }
 
     return (
-        <div className="container" role="main"> 
-                
-            <h1 className="mb-3">Update Character {thisRunner.name}</h1>
-            <div className="row">
-                <div className="col text-center border bg-secondary"><h3>Character Type</h3><hr/></div>
-            </div>
-            <div className="row mb-3 d-flex justify-content-center text-center bg-dark text-info">
-                <div className="col py-3">
-                    <select name="chartype" onChange={changeCharType} style={{color:"#000"}} value={thisRunner.type}>
-                        <option value="Netrunner">Netrunner</option>
-                        <option value="Other">Other</option>
-                    </select>
+        <div className="container bg-secondary" role="main"> 
+
+            <div className="row text-center">
+                <div className="col text-center justify-content-center ">
+                    <div className="h3 m-2">---[{thisRunner.name}]---</div>
                 </div>
-                <div className="col py-3">
-                    {thisRunner.type}
+            </div>                
+            <div className="row">
+                <div className="col text-center border bg-secondary"><h3>Character Settings</h3></div>
+            </div>
+
+            <div className="row border py-3 bg-light">
+                <div className="col">Type (Runner/Nonrunner)</div>
+                <div className="col-3">
+                    <select name="chartype" onChange={changeCharType} style={{color:"#000"}} value={thisRunner.type}>
+                            <option value="Netrunner">Netrunner</option>
+                            <option value="Other">Other</option>
+                        </select>     
+                    </div>
+                <div className="col-3">
+                    <div>{thisRunner.type}</div>
                 </div>
             </div>
 
+
+
             <CharacterAttribEdit attrib="Interface" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
-            <CharacterAttribEdit attrib="Slots" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
+            { thisRunner.type == "Netrunner" && (<CharacterAttribEdit attrib="Slots" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/> )}
             <CharacterAttribEdit attrib="Speed" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
             <CharacterAttribEdit attrib="Reflex" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
             <CharacterAttribEdit attrib="Damage" decreaseAttribute={decreaseAttribute} increaseAttribute={increaseAttribute} thisRunner={thisRunner}/>
 
-            <hr/>
+            <div className="row">
+                <div className="col text-center border bg-secondary"><h3>Programs</h3></div>
+            </div>
+
+            <div className="row">
+                <div className="col text-center border bg-white">
 
             {
                 programSlots.map(p => (
@@ -180,12 +193,12 @@ const CharacterEdit = (props) => {
                   <ProgramEditItem key={p.id} program={p} doShowInstallModal={doShowInstallModal} doShowRemoveModal={doShowRemoveModal}/> 
                 ))
             }
-
-            <hr/>
+                </div>
+            </div>
 
             <div className="row">
                 <div className="col">
-                    <button onClick={() => (props.setPage("home"))} className="btn btn-primary" style={{width:"100%"}}>Home</button>
+                    <button onClick={() => (props.setPage("home"))} className="btn btn-primary btn-block py-3 border my-3">Home</button>
                 </div>
             </div>
 
