@@ -56,10 +56,10 @@ const Home = (props) => {
                         <p>{me.slots}</p>
                     </div>
                     <div className="col">
-                        <p>{me.speed}</p>
+                        <p>{me.reflex}</p>
                     </div>
                     <div className="col">
-                        <p>{me.reflex}</p>
+                        <p>{me.speed}</p>
                     </div>
                     <div className="col">
                         <p>{me.damage}</p>

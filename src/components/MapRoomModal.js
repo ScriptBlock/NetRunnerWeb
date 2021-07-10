@@ -39,13 +39,10 @@ var abilities = [
             } else {
                 // console.log(props.runner)
                 let showMoveDown = false
-                let canSlideDown = false
                 if(props.room.hasexits != null && props.room.hasexits == true) {
                     showMoveDown = true
-                    canSlideDown = true
                     if(props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen == false) {
                         showMoveDown = false
-                        canSlideDown = false
                     }
                     if(props.rooms.filter(r => r.sourceroom == props.room.id).length > 0)  {
                         showMoveDown = false
@@ -64,8 +61,7 @@ var abilities = [
                         {props.room.contents != null && props.room.contents.type == "password" && props.room.roomopen != true && <ModalModeButton mode="password" modeName="Enter Password" setModalMode={setModalMode}/>}
                         {props.room.contents != null && props.room.contents.type == "file" && !props.runner.ids.includes(props.room.contents.id) && <ModalModeButton mode="eyedee" modeName="Eye Dee File" setModalMode={setModalMode}/>}
                         {props.room.contents != null && props.room.contents.type == "controlpoint" && !props.runner.controlpoints.includes(props.room.contents.id) && <ModalModeButton mode="control" modeName="Control" setModalMode={setModalMode}/>}
-                        {tracked && <ModalModeButton mode="slideup" modeName="Slide Up" setModalMode={setModalMode}/> }
-                        {tracked && canSlideDown && <ModalModeButton mode="slidedown" modeName="Slide Down" setModalMode={setModalMode}/> }
+                        {tracked  && <ModalModeButton mode="slide" modeName="Slide" setModalMode={setModalMode}/> }
 
                         {/* TODO if tracked, add the slide capability */}
                         {showMoveDown && <ModalModeButton mode="movedown" modeName="Move Down" setModalMode={setModalMode}/>}
@@ -168,6 +164,26 @@ var abilities = [
                     </>
                 )
             }
+            if(modalMode == "slide") {
+                retVal = (
+                    <>
+                        <form onSubmit={(f) => {f.preventDefault()}}>
+                            <div className="form-group">
+                                <label htmlFor="dc">Rolled DC for Slide</label>
+                                <input className="form-control input" type="text" name="dc" id="dc" onChange={(e) => enteredDC.current = e.target.value}></input>
+                            </div>
+                            <button type="button" className="btn btn-primary" onClick={(e) => {
+                                e.preventDefault()
+                                console.log(`submitting slide modal action ${props.room.id}`)
+                                props.doModalAction({"dv":enteredDC.current, "modalAction": modalMode, "roomid": props.room.id})
+                                resetModal()
+                            }}>Execute</button>
+                        </form>                        
+                    </>
+                )
+ 
+            }
+ 
 
         }
 

@@ -21,7 +21,7 @@ const Map = (props) => {
     // const [mapContents, setMapContents] = useState([])
 
     const refreshRoomData = (mapID) => {
-        console.log(`refreshing room data for ${mapID}`)
+        // console.log(`refreshing room data for ${mapID}`)
         // localhost:3000/room/1?gathercontext=true&ownedCharacter=1        
 
         fetch(`http://${SERVER_ADDRESS}:3000/room/${mapID}?gathercontext=true&ownedcharacter=${props.ownedCharacter}`)
@@ -42,14 +42,28 @@ const Map = (props) => {
 
     const doModalAction = (details) => {
         // alert(`modal action clicked ${modalAction} with a rollDC of ${rolledDC}`)
-        console.log(details)
+        //console.log(details)
         switch(details.modalAction) {
-            case "control": 
+            case "slide":
+                ///action/slide/:netrunnerid
+                fetch(`http://${SERVER_ADDRESS}:3000/action/slide/${props.ownedCharacter}`, {...dp, body: JSON.stringify({"dv": details.dv}) })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("slide action")
+                    console.log(data)
+                    refreshRoomData(activeMap)
+                })    
+                break
+
+
+                case "control": 
                 // app.post("/action/id/:netrunnerid", (req, res, next) => {
                 fetch(`http://${SERVER_ADDRESS}:3000/action/control/${props.ownedCharacter}`, {...dp, body: JSON.stringify({"dv": details.dv, "roomid": details.roomid}) })
                 .then(response => response.json())
                 .then(data => {
                     console.log("control action")
+                    console.log(data)
+
                     refreshRoomData(activeMap)
                 })    
                 break
@@ -95,7 +109,10 @@ const Map = (props) => {
                 .then(response => response.json())
                 .then(data => {
                     console.log("tried to move the netrunner to the target room")
+                    console.log(data)
+
                     refreshRoomData(activeMap)
+
                 })    
                 break
 
@@ -105,6 +122,8 @@ const Map = (props) => {
                 .then(response => response.json())
                 .then(data => {
                     console.log("tried to move the netrunner to the target room")
+                    console.log(data)
+
                     refreshRoomData(activeMap)
                 })    
                 break
@@ -159,8 +178,8 @@ const Map = (props) => {
     }
 
     const toggleProgramState = (program) => {
-        console.log("clicked an app to toggle state")
-        console.log(program)
+        // console.log("clicked an app to toggle state")
+        // console.log(program)
         programToggle.current = program
         setShowRezModal(true)
     }
