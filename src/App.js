@@ -283,7 +283,7 @@ function App() {
       if(page == "netrunner") {
         let runnerCurrentMap = runners.find(n => n.id == ownedCharacter).mapid 
         if(runnerCurrentMap != -1) {
-          return (<Map ownedCharacter={ownedCharacter} runners={runners} refreshRunners={refreshRunners} jackOut={jackOut} setPage={setPage}/>)
+          return (<Map ownedCharacter={ownedCharacter} runners={runners} ices={ices} refreshRunners={refreshRunners} jackOut={jackOut} setPage={setPage}/>)
         } else {      
           return (<NetArchListing playerID={ownedCharacter} jackIn={jackIn}/>)
         }

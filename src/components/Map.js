@@ -14,10 +14,13 @@ const Map = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
     const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
+    
     const programToggle = useRef()
     const [roomData, setRoomData] = useState([])
     const [activeMap, setActiveMap] = useState(-1)
     const [showRezModal, setShowRezModal] = useState(false)
+    const [initDetail, setInitDetail] = useState()
+
     // const [mapContents, setMapContents] = useState([])
 
     const refreshRoomData = (mapID) => {
@@ -157,6 +160,14 @@ const Map = (props) => {
 
     useEffect(() => {
         setActiveMap(props.runners.find(r=> r.id == props.ownedCharacter).mapid)
+
+        let currentActive = props.runners.find(r => r.initActive == true)
+        currentActive = currentActive == undefined ? props.ices.find(i => i.initActive == true) : currentActive
+        currentActive = currentActive == undefined ? {"name": "Nobody"} : currentActive
+
+        console.log(`Current active = ${currentActive.name}`)
+
+
     }, props.runners)
 
     useEffect(() => {
@@ -186,7 +197,7 @@ const Map = (props) => {
 
     return (
         <div className="container-flex bg-dark pb-5">
-            <div className="row">
+            {/* <div className="row">
                 <div className="col">
                     <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { refreshRoomData(activeMap) }}>Refresh</button>
                 </div>
@@ -196,10 +207,16 @@ const Map = (props) => {
                 <div className="col">
                     <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { props.setPage("home") }}>Home</button>
                 </div>
-            </div>
-            <hr className="bg-white"></hr>
-            <div className="row d-block overflow-auto" style={{height: 400}}>
-                <div className="col">
+            </div> */}
+            {/* <hr className="bg-white"></hr> */}
+            <div className="row overflow-auto" style={{height: 400}}>
+                <div className="col border">
+                    <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { props.setPage("home") }}>Home</button>
+                    <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { refreshRoomData(activeMap) }}>Refresh Map</button>
+                    <button className="btn align-items-bottom btn-danger btn-block p-2 mx-2" onClick={() => { props.jackOut() }}>Jack Out</button>
+                    
+                </div>
+                <div className="col-sm border">
                     <ul className="h-25 tree d-flex justify-content-center text-light">
                         { 
                             roomData.length > 0 && (

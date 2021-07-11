@@ -78,7 +78,9 @@ const InitItem = (props) => {
             </div>
         )
     } else {
-        let speedField = `${thisItem.speed || thisItem.Spd}`
+        console.log(thisItem)
+        let speedField = thisItem.speed == undefined ? thisItem.Spd : thisItem.speed
+        // let speedField = `${thisItem.speed || thisItem.Spd}`
         if(thisItem.reflex != undefined) {
             speedField += `/${thisItem.reflex}`
         } else {
