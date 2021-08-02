@@ -7,14 +7,16 @@ import { useState, useEffect, useRef } from 'react'
 
 import MapLayer from './MapLayer'
 import ProgramItem from './ProgramItem'
+import MessagePanel from './MessagePanel'
 import Modal from "react-bootstrap/Modal"
+
 
 
 const Map = (props) => {
     const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS
     const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
-    
+    const initButtonRef = useRef()
     const programToggle = useRef()
     const [roomData, setRoomData] = useState([])
     const [activeMap, setActiveMap] = useState(-1)
@@ -113,7 +115,7 @@ const Map = (props) => {
                 .then(data => {
                     console.log("tried to move the netrunner to the target room")
                     console.log(data)
-
+                    props.addUIMessage(data)
                     refreshRoomData(activeMap)
 
                 })    
@@ -165,8 +167,21 @@ const Map = (props) => {
         currentActive = currentActive == undefined ? props.ices.find(i => i.initActive == true) : currentActive
         currentActive = currentActive == undefined ? {"name": "Nobody"} : currentActive
 
-        console.log(`Current active = ${currentActive.name}`)
+        setInitDetail(currentActive)
 
+        // console.log(initButtonRef.current)
+
+        initButtonRef.current.innerText = "Current Turn:  " + currentActive.name 
+        if(props.ownedCharacter == currentActive.id) {
+            initButtonRef.current.style.backgroundColor = "green"
+            initButtonRef.current.style.color = "white"
+        } else {
+            initButtonRef.current.style.backgroundColor = "darkgray"
+            initButtonRef.current.style.color = "black"
+        }
+
+        //initButtonRef
+        // console.log(`Current active = ${currentActive.name}`)
 
     }, props.runners)
 
@@ -209,10 +224,11 @@ const Map = (props) => {
                 </div>
             </div> */}
             {/* <hr className="bg-white"></hr> */}
-            <div className="row overflow-auto" style={{height: 400}}>
+            <div className="row overflow-auto" style={{height: 500}}>
                 <div className="col border">
                     <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { props.setPage("home") }}>Home</button>
                     <button className="btn btn-primary btn-block p-2 m-2" onClick={() => { refreshRoomData(activeMap) }}>Refresh Map</button>
+                    <button ref={initButtonRef} className="btn btn-primary btn-block p-2 m-2" onClick={() => { props.setPage("init") }}>View Initiative</button>
                     <button className="btn align-items-bottom btn-danger btn-block p-2 mx-2" onClick={() => { props.jackOut() }}>Jack Out</button>
                     
                 </div>
@@ -227,7 +243,7 @@ const Map = (props) => {
                 </div>
             </div>            
 
-            <hr className="bg-white"/>
+            {/* <hr className="bg-white"/> */}
             <div className="row m-2">
                 <div className="col m-1 p-0">
                         <div className="card-columns" style={{columnCount:3}}>
@@ -248,6 +264,10 @@ const Map = (props) => {
                         </Modal.Header>
             
                         <Modal.Body>
+                            <div>
+                                {programToggle.current.effect}
+                            </div>
+                            <hr/>
                             { 
                                 programToggle.current !=undefined && programToggle.current.isactivated ? 
                                     <button className="btn btn-block btn-danger" onClick={() => { doModalAction({"modalAction": "deactivateprogram", "id": programToggle.current.id})}}>Derezz Program?</button> :
@@ -261,6 +281,7 @@ const Map = (props) => {
                     </Modal>
             }
 
+            <MessagePanel uiMessages={props.uiMessages}/>
 
         </div>
 

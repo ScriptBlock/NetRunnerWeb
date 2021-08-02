@@ -118,7 +118,7 @@ const MapLayer = (props) => {
             props.room.ices.forEach(i => {
                 let decoration = ""
                 if(i.tracking == currentRunner.id) {
-                    console.log("setting decoration to star")
+                    // console.log("setting decoration to star")
                     decoration = <FontAwesomeIcon icon={faStar} />
                 }
                 finalRoomContent.current = <>{finalRoomContent.current}<div className="bg-danger text-light">{i.name}{decoration}</div></>

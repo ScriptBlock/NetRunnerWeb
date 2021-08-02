@@ -60,7 +60,7 @@ const InitItem = (props) => {
         if(props.initItem.type == "ice") {
             console.log("found an ice in init")
             let temp = props.ices.find(i => i.id != undefined && i.id == props.initItem.thingID)
-            console.log(temp)
+            //console.log(temp)
             temp.type="Ice"
             setThisItem(temp)
         }
@@ -78,7 +78,7 @@ const InitItem = (props) => {
             </div>
         )
     } else {
-        console.log(thisItem)
+        //console.log(thisItem)
         let speedField = thisItem.speed == undefined ? thisItem.Spd : thisItem.speed
         // let speedField = `${thisItem.speed || thisItem.Spd}`
         if(thisItem.reflex != undefined) {

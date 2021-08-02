@@ -33,6 +33,7 @@ function App() {
   // const [activeJackIn, setActiveJackIn] = useState(0)
   const [runners, setRunners] = useState([])
   const [ices, setIces] = useState([])
+  const [uiMessages, setUIMessages] = useState([])
 
   const dp = {method: "POST", headers: {'Content-Type': 'application/json'} }
 
@@ -256,7 +257,18 @@ function App() {
       console.log(data)
       refreshRunners()
     })
+  }
 
+  const addUIMessage = (message) => {
+    if(message.length == undefined) {
+      setUIMessages([...uiMessages, {...message, ack:false}])
+    } else {
+      message.forEach(m => {
+        setUIMessages([...uiMessages, {...m, ack:false}])
+      })
+    }
+    // const [uiMessages, setUIMessages] = useState([])
+    setUIMessages([...uiMessages, {...message, ack:false}])
   }
 
   if (error) {
@@ -283,7 +295,7 @@ function App() {
       if(page == "netrunner") {
         let runnerCurrentMap = runners.find(n => n.id == ownedCharacter).mapid 
         if(runnerCurrentMap != -1) {
-          return (<Map ownedCharacter={ownedCharacter} runners={runners} ices={ices} refreshRunners={refreshRunners} jackOut={jackOut} setPage={setPage}/>)
+          return (<Map ownedCharacter={ownedCharacter} runners={runners} ices={ices} refreshRunners={refreshRunners} jackOut={jackOut} setPage={setPage} addUIMessage={addUIMessage} uiMessages={uiMessages}/>)
         } else {      
           return (<NetArchListing playerID={ownedCharacter} jackIn={jackIn}/>)
         }
